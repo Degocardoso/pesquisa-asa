@@ -4,15 +4,15 @@
  *
  * Nao conhece HTML nem HTTP. Recebe por injecao:
  *   crm      buscarPendentes(mesas, agora) e gravar(id, registro)
- *   visao    descanso(), pesquisa(p, respostas), respostas(r), alerta(ate),
- *            agradecimento(tipo), conexao(estado)
+ *   visao    descanso(), pesquisa(p, respostas), respostas(r), faltam(perguntas),
+ *            alerta(ate), agradecimento(tipo), conexao(estado)
  *   relogio  agora(), agendar(fn, ms), cancelar(marca)
  * O relogio injetado e o que deixa os testes avancarem 30 minutos em
  * milissegundos.
  */
 
 import {
-  Encerramento, respostasEmBranco, respostaValida, algoMarcado,
+  Encerramento, respostasEmBranco, respostaValida, algoMarcado, perguntasEmBranco,
   montarRegistro, venceEm, estaVencida, inicioDoDia, triar,
 } from "../modelo/pesquisa.js";
 
@@ -83,6 +83,11 @@ export class Ciclo {
 
   enviar() {
     if (!this._atual) return;
+    const faltam = perguntasEmBranco(this._atual.respostas);
+    if (faltam.length) {
+      this._visao.faltam(faltam);
+      return;
+    }
     this._encerrarAtual(Encerramento.ENVIADA);
     this._agradecer("respostas");
   }

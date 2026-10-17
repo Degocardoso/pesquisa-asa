@@ -64,9 +64,14 @@ como "Cancelada por tempo". Decidido assim em outubro de 2026.
 marcação a troca é imediata. Pesquisas que chegam durante o alerta não o
 reiniciam: a mais recente toma o lugar na espera e a anterior sai por tempo.
 
-**O botão Enviar só aparece depois da primeira marcação**, como no layout. Por
-isso "enviar tudo em branco" não acontece pela tela. A regra trata o caso mesmo
-assim (vira "Cancelada pelo cliente").
+**Enviar exige as três respostas** (decidido em outubro de 2026, depois do
+primeiro teste). Faltando alguma, a tela diz quais e destaca as perguntas; nada
+é gravado. Com respostas pela metade, o caminho é "Prefiro não responder", que
+grava o que foi marcado como "Cancelada pelo cliente". Por isso "Respondida
+parcialmente" não acontece mais pela tela. A regra do modelo ainda trata o caso,
+para não depender da tela.
+
+**O botão Enviar só aparece depois da primeira marcação**, como no layout.
 
 **Falha de rede no envio não perde a resposta.** O cliente vê o agradecimento na
 hora; o registro fica numa fila **só em memória** e é reenviado a cada consulta.

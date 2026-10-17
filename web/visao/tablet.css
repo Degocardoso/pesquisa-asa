@@ -211,6 +211,22 @@ button {
 .rotulo { font-size: 18px; line-height: 1; color: var(--tinta); }
 .estrela .rotulo  { font-size: 16px; margin-top: 2px; }
 
+/* Pergunta que faltou ao tentar enviar. Some assim que for respondida. */
+.cartao.falta {
+  border: 2px solid var(--vermelho);
+  background: #fdf1f0;
+}
+
+.aviso-faltam {
+  position: absolute;
+  left: 0; top: 756px;
+  width: 100%;
+  text-align: center;
+  font-size: 19px;
+  line-height: 24px;
+  color: var(--vermelho);
+}
+
 .opcao.is-marcada .icone   { background-color: var(--verde-vivo); transform: scale(1.06); }
 .opcao.is-marcada .rotulo  { color: var(--verde-vivo); }
 

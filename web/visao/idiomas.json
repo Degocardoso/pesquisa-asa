@@ -17,7 +17,10 @@
       "enviar": "Enviar resposta",
       "recusar": "Prefiro não responder",
       "alertaAntes": "Uma nova pesquisa vai começar em",
-      "alertaDepois": "s. Toque em <b>Enviar resposta</b> para concluir a sua."
+      "alertaDepois": "s. Toque em <b>Enviar resposta</b> para concluir a sua.",
+      "faltaUma": "Para enviar, responda também a pergunta {perguntas}. Se preferir, toque em “Prefiro não responder”.",
+      "faltamVarias": "Para enviar, responda também as perguntas {perguntas}. Se preferir, toque em “Prefiro não responder”.",
+      "e": "e"
     },
     "agradecimento": {
       "respostas": "Agradecemos por suas respostas!",
@@ -76,7 +79,10 @@
       "enviar": "Submit",
       "recusar": "I'd rather not answer",
       "alertaAntes": "A new survey will start in",
-      "alertaDepois": "s. Tap <b>Submit</b> to finish yours."
+      "alertaDepois": "s. Tap <b>Submit</b> to finish yours.",
+      "faltaUma": "To submit, please also answer question {perguntas}. Or tap “I'd rather not answer”.",
+      "faltamVarias": "To submit, please also answer questions {perguntas}. Or tap “I'd rather not answer”.",
+      "e": "and"
     },
     "agradecimento": {
       "respostas": "Thank you for your answers!",

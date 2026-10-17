@@ -52,6 +52,12 @@ export function algoMarcado(respostas) {
   return quantasRespondidas(respostas) > 0;
 }
 
+// Enviar exige as tres. Quem nao quer responder alguma usa "Prefiro nao
+// responder", que grava o que ja foi marcado.
+export function perguntasEmBranco(respostas) {
+  return PERGUNTAS.filter((p) => respostas[p] === null);
+}
+
 
 // ---------------------------------------------------------------------------
 // Encerramento
@@ -62,9 +68,9 @@ export function situacaoDoEncerramento(respostas, encerramento) {
     case Encerramento.ENVIADA: {
       const respondidas = quantasRespondidas(respostas);
       if (respondidas === PERGUNTAS.length) return SITUACAO.RESPONDIDA;
-      // Enviar tudo em branco equivale a recusar. Pela tela nao acontece (o
-      // botao so aparece depois da primeira marcacao), mas a regra nao pode
-      // depender disso.
+      // Pela tela nao acontece: o controlador so aceita o envio com as tres
+      // respondidas (regra de outubro de 2026). Os dois casos abaixo ficam
+      // para que a regra nao dependa da tela.
       if (respondidas === 0) return SITUACAO.CANCELADA_PELO_CLIENTE;
       return SITUACAO.RESPONDIDA_PARCIALMENTE;
     }

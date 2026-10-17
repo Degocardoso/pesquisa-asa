@@ -71,12 +71,16 @@ As cinco formas de terminar **todas gravam no CRM**:
 | Situação | Quando | P1 e P2 | P3 |
 |---|---|---|---|
 | Respondida | enviou as três | marcadas | marcada |
-| Respondida parcialmente | enviou pulando alguma | marcada ou `0` | marcada ou "Não respondida" |
+| Respondida parcialmente | não acontece pela tela (Enviar exige as três) | — | — |
 | Cancelada pelo cliente | "Prefiro não responder" | o que marcou ou `0` | o que marcou ou "Não respondida" |
 | Cancelada por tempo | 30 min desde a chamada, ou nunca chegou a aparecer | o que marcou ou `0` | o que marcou ou "Não respondida" |
 | Cancelada por nova senha | estava na tela e chegou a seguinte | o que marcou ou `0` | o que marcou ou "Não respondida" |
 
 Toda gravação preenche também `fecap_datarealizacaopesquisa`, em UTC.
+
+**Enviar exige as três respostas.** Se faltar alguma, a tela avisa quais e
+destaca as perguntas em branco. Quem não quer responder tudo usa "Prefiro não
+responder", que grava o que já foi marcado.
 
 **"Nova senha" é só para quem tinha a pesquisa na frente.** Uma pendente que
 nunca apareceu (chegou vencida, ou foi superada por outra antes de aparecer)
