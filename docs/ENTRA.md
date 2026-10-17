@@ -52,9 +52,16 @@ keytool -exportcert -alias pesquisa -keystore pesquisa-asa.jks | openssl sha1 -b
 Sai algo como `ga0RGNYHvNM5d0SLGQfpQWAPGJ8=`. Cole em `hashDaAssinatura` no
 `assinatura.properties` **exatamente assim, sem codificar**.
 
-No Windows sem openssl, o Android Studio mostra o SHA-1 em *Gradle → app →
-signingReport*. O portal do Entra, no passo 3, também aceita o SHA-1 e calcula o
-hash.
+No Windows sem openssl, pegue o SHA-1 com
+`keytool -list -v -keystore pesquisa-asa.jks -alias pesquisa` (linha `SHA1:`) e
+converta com Python:
+
+```
+python -c "import base64,sys; print(base64.b64encode(bytes.fromhex(sys.argv[1].replace(':',''))).decode())" AB:CD:...
+```
+
+O SHA-1 não é segredo (é a impressão digital pública da chave); o hash é ele
+mesmo, só que em base64.
 
 ## Passo 3 — Registro do aplicativo
 
