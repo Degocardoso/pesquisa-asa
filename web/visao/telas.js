@@ -56,6 +56,7 @@ export class Visao {
     this._acoes = acoes;
     this._conexao = { semRede: false, desconectado: null };
     this._semMesa = false;
+    this._faltando = [];
     this._relogioDoAlerta = null;
 
     this._ligarPesquisa();
@@ -72,6 +73,7 @@ export class Visao {
   pesquisa(_pesquisa, respostas) {
     // Cada pesquisa comeca no idioma padrao: a pessoa anterior pode ter
     // trocado para ingles.
+    this._faltando = [];
     this._trocarIdioma(this._config.idioma_padrao);
     this.alerta(null);
     this.respostas(respostas);
@@ -89,6 +91,16 @@ export class Visao {
     });
     // Como no layout: o botao de enviar so aparece depois da primeira marcacao.
     $("#btn-enviar").hidden = !algum;
+
+    // O aviso de "faltou responder" acompanha as marcacoes: some quando a
+    // pessoa responde o que faltava, sem precisar tocar em Enviar de novo.
+    this._faltando = this._faltando.filter((p) => respostas[p] === null);
+    this._desenharFaltam();
+  }
+
+  faltam(perguntas) {
+    this._faltando = [...perguntas];
+    this._desenharFaltam();
   }
 
   alerta(ate) {
@@ -152,10 +164,29 @@ export class Visao {
     }
   }
 
+  _desenharFaltam() {
+    const cartoes = $$("#tela-pesquisa .cartao");
+    cartoes.forEach((c) => c.classList.toggle("falta", this._faltando.includes(c.dataset.pergunta)));
+
+    const aviso = $("#aviso-faltam");
+    if (!this._faltando.length) { aviso.hidden = true; return; }
+
+    // Numero da pergunta pela ordem na tela, o mesmo que a pessoa le no titulo.
+    const ordem = cartoes.map((c) => c.dataset.pergunta);
+    const numeros = this._faltando.map((p) => ordem.indexOf(p) + 1).sort();
+    const lista = numeros.length === 1
+      ? String(numeros[0])
+      : numeros.slice(0, -1).join(", ") + " " + this._textos.t("pesquisa.e") + " " + numeros[numeros.length - 1];
+    const chave = numeros.length === 1 ? "pesquisa.faltaUma" : "pesquisa.faltamVarias";
+    aviso.textContent = this._textos.t(chave).replace("{perguntas}", lista);
+    aviso.hidden = false;
+  }
+
   _trocarIdioma(idioma) {
     this._textos.idioma = idioma;
     this._textos.aplicar($("#tela-pesquisa"));
     this._textos.aplicar($("#tela-agradecimento"));
+    this._desenharFaltam();
     $$(".idioma").forEach((b) => b.classList.toggle("is-ativo", b.dataset.idioma === idioma));
     document.documentElement.lang = idioma === "pt" ? "pt-BR" : idioma;
   }

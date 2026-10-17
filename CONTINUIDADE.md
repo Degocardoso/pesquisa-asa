@@ -15,22 +15,18 @@ prazo de 30 minutos, troca por nova senha com alerta, fila de gravação em
 memória, telas em PT e EN, manutenção com PIN. São 37 testes automáticos
 (`npm test`), e o fluxo inteiro foi percorrido num Chromium sem erro no console.
 
-**Escrito mas nunca compilado:** a casca Android (`android/`). O ambiente em que
-ela foi escrita não alcançava os repositórios do Google nem o Maven, então o
-primeiro build no Android Studio pode pedir ajustes pequenos (versão de
-dependência, um import). A versão do MSAL (`5.4.0`) também precisa ser
-conferida contra a mais recente.
+**Testado contra o CRM real em 17/10/2026**, no emulador (Pixel Tablet,
+Android 15), com acesso por segredo: a consulta trouxe a pesquisa pendente da
+Mesa 1, a tela apareceu e a resposta foi gravada e conferida no CRM pela Web
+API. A casca Android compilou sem ajustes.
 
-**Nunca rodou contra o CRM real.** A consulta e a gravação estão cobertas por
-teste no formato (filtro, colunas, corpo, PATCH com `If-Match`), não contra o
-Dataverse.
+**Ainda não testado no CRM real:** respondida parcialmente, cancelada pelo
+cliente, por tempo e por nova senha (com o alerta de 30 s), queda de Wi-Fi, e o
+quiosque como dono do dispositivo num tablet de verdade. Todos estão cobertos
+pelos testes automáticos e pelo simulador.
 
-**Compilado e rodando no emulador** desde 17/10/2026, com o modo por conta
-chegando até o login da Microsoft. O modo por segredo foi escrito depois e
-ainda não foi compilado.
-
-**Falta para o primeiro teste real:** segredo e usuário de aplicativo no CRM
-(`docs/SEGREDO.md`).
+**O modo por conta (MSAL)** chegou até o login da Microsoft, mas nunca até o
+CRM: falta o consentimento do administrador no registro dos tablets.
 
 ---
 
@@ -68,9 +64,14 @@ como "Cancelada por tempo". Decidido assim em outubro de 2026.
 marcação a troca é imediata. Pesquisas que chegam durante o alerta não o
 reiniciam: a mais recente toma o lugar na espera e a anterior sai por tempo.
 
-**O botão Enviar só aparece depois da primeira marcação**, como no layout. Por
-isso "enviar tudo em branco" não acontece pela tela. A regra trata o caso mesmo
-assim (vira "Cancelada pelo cliente").
+**Enviar exige as três respostas** (decidido em outubro de 2026, depois do
+primeiro teste). Faltando alguma, a tela diz quais e destaca as perguntas; nada
+é gravado. Com respostas pela metade, o caminho é "Prefiro não responder", que
+grava o que foi marcado como "Cancelada pelo cliente". Por isso "Respondida
+parcialmente" não acontece mais pela tela. A regra do modelo ainda trata o caso,
+para não depender da tela.
+
+**O botão Enviar só aparece depois da primeira marcação**, como no layout.
 
 **Falha de rede no envio não perde a resposta.** O cliente vê o agradecimento na
 hora; o registro fica numa fila **só em memória** e é reenviado a cada consulta.
@@ -110,14 +111,12 @@ aberta o ciclo fica parado; esquecida aberta, o tablet ficaria sem pesquisa.
 
 ## Onde ficou dívida
 
-**O modo por segredo nunca foi compilado nem testado** (ver Situação).
-
 **Lembrete do vencimento do segredo** depende de alguém olhar o diagnóstico
 ou da agenda. Não há aviso automático por e-mail.
 
-**Nunca houve gravação real no CRM.** A primeira semana deve ser acompanhada
-pelo diagnóstico da manutenção ("Último erro") e por uma conferência das
-colunas gravadas no CRM.
+**Só uma gravação real foi conferida até agora.** A primeira semana deve ser
+acompanhada pelo diagnóstico da manutenção ("Último erro") e por uma
+conferência das colunas gravadas no CRM.
 
 **Os apps e fluxos antigos precisam ser desligados no dia da troca.** Os dois
 juntos gravariam no mesmo registro.

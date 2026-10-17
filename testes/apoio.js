@@ -55,11 +55,13 @@ export class VisaoGravadora {
     this.alertaAte = null;
     this.agradecimentoTipo = null;
     this.conexaoAtual = { semRede: false, desconectado: null };
+    this.faltando = null;
   }
 
   descanso() { this.tela = "descanso"; this.pesquisaNaTela = null; }
   pesquisa(p, respostas) { this.tela = "pesquisa"; this.pesquisaNaTela = p; this.respostasNaTela = respostas; }
   respostas(r) { this.respostasNaTela = r; }
+  faltam(perguntas) { this.faltando = perguntas; }
   alerta(ate) { this.alertaAte = ate; }
   agradecimento(tipo) { this.tela = "agradecimento"; this.agradecimentoTipo = tipo; }
   conexao(estado) { this.conexaoAtual = estado; }

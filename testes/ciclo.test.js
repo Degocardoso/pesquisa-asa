@@ -69,6 +69,40 @@ test("marcacao invalida e ignorada", async () => {
   assert.deepEqual(visao.respostasNaTela, { atendimento: null, dominio: null, necessidade: null });
 });
 
+test("enviar com pergunta em branco nao encerra: avisa quais faltam", async () => {
+  const { relogio, crm, visao, ciclo, chamar } = montar();
+  chamar(1);
+  await relogio.segundos(1);
+  ciclo.marcar("atendimento", 4);
+  ciclo.enviar();
+  await relogio.segundos(0);
+
+  assert.equal(visao.tela, "pesquisa");
+  assert.deepEqual(visao.faltando, ["dominio", "necessidade"]);
+  assert.equal(crm.gravacoes.length, 0);
+
+  ciclo.marcar("dominio", 2);
+  ciclo.marcar("necessidade", "sim");
+  ciclo.enviar();
+  await relogio.segundos(0);
+  assert.equal(visao.tela, "agradecimento");
+  assert.equal(crm.gravacoes[0].situacao, S.RESPONDIDA);
+});
+
+test("duas respondidas e prefiro nao responder: Cancelada pelo cliente com as duas", async () => {
+  const { relogio, crm, ciclo, chamar } = montar();
+  chamar(1);
+  await relogio.segundos(1);
+  ciclo.marcar("atendimento", 5);
+  ciclo.marcar("necessidade", "aguardando");
+  ciclo.recusar();
+  await relogio.segundos(0);
+  assert.equal(crm.gravacoes[0].situacao, S.CANCELADA_PELO_CLIENTE);
+  assert.equal(crm.gravacoes[0].notaAtendimento, 5);
+  assert.equal(crm.gravacoes[0].notaDominio, 0);
+  assert.equal(crm.gravacoes[0].necessidade, N.AGUARDANDO_RETORNO);
+});
+
 test("prefiro nao responder grava Cancelada pelo cliente com o que marcou", async () => {
   const { relogio, crm, visao, ciclo, chamar } = montar();
   chamar(1);
@@ -197,6 +231,8 @@ test("sem rede no envio: agradece, guarda em memoria, nao reexibe e grava quando
   const senha = chamar(1);
   await relogio.segundos(1);
   ciclo.marcar("atendimento", 5);
+  ciclo.marcar("dominio", 3);
+  ciclo.marcar("necessidade", "nao");
 
   crm.falha = "rede";
   ciclo.enviar();
@@ -212,7 +248,7 @@ test("sem rede no envio: agradece, guarda em memoria, nao reexibe e grava quando
   crm.falha = null;
   await relogio.segundos(CONFIG.segundos_entre_consultas);
   assert.equal(visao.tela, "descanso", "a pesquisa ja respondida nao pode voltar");
-  assert.deepEqual(situacoes(crm), [[senha.senha, S.RESPONDIDA_PARCIALMENTE]]);
+  assert.deepEqual(situacoes(crm), [[senha.senha, S.RESPONDIDA]]);
   assert.equal(visao.conexaoAtual.semRede, false);
   assert.equal(ciclo.diagnostico().aguardandoGravacao, 0);
 });
