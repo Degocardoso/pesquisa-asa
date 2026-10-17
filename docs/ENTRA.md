@@ -21,12 +21,17 @@ registro.**
 
 ## Passo 1 — Chave de assinatura
 
-No computador onde o Android Studio está instalado, dentro da pasta `android/`:
+No computador onde o Android Studio está instalado, no PowerShell, dentro da
+pasta `android/`. O `keytool` vem com o Android Studio mas não fica no PATH,
+por isso o caminho completo:
 
+```powershell
+& "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" -genkeypair -v -keystore pesquisa-asa.jks -alias pesquisa -keyalg RSA -keysize 2048 -validity 10000
 ```
-keytool -genkeypair -v -keystore pesquisa-asa.jks -alias pesquisa ^
-  -keyalg RSA -keysize 2048 -validity 10000
-```
+
+Se o Android Studio estiver instalado em outra pasta, o mesmo resultado sai pela
+interface: *Build → Generate Signed App Bundle or APK → APK → Create new*, com o
+arquivo em `android/pesquisa-asa.jks` e o apelido `pesquisa`.
 
 Guarde o arquivo `pesquisa-asa.jks` e as senhas num cofre da TI. **Perder a
 chave significa** não conseguir atualizar os APKs já instalados (o Android
@@ -53,7 +58,8 @@ Sai algo como `ga0RGNYHvNM5d0SLGQfpQWAPGJ8=`. Cole em `hashDaAssinatura` no
 `assinatura.properties` **exatamente assim, sem codificar**.
 
 No Windows sem openssl, pegue o SHA-1 com
-`keytool -list -v -keystore pesquisa-asa.jks -alias pesquisa` (linha `SHA1:`) e
+`& "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" -list -v -keystore pesquisa-asa.jks -alias pesquisa`
+(linha `SHA1:`) e
 converta com Python:
 
 ```
