@@ -1,0 +1,35 @@
+{
+  "_leia_me": "Regras iguais para os tres tablets. O que muda de um tablet para outro (qual mesa, PIN, conta) fica na propria instalacao e se troca pela tela de manutencao.",
+
+  "_segundos_entre_consultas": "Intervalo entre consultas ao CRM. Cada consulta e filtrada pela mesa e pelo dia, com limite pequeno: tres tablets a cada 5 segundos sao 36 consultas leves por minuto.",
+  "segundos_entre_consultas": 5,
+
+  "_minutos_para_vencer": "Contados desde a chamada da senha (Hora de Chamada no CRM), nao desde que a pesquisa apareceu. Pesquisa que chega vencida nao aparece: e gravada direto como Cancelada por tempo.",
+  "minutos_para_vencer": 30,
+
+  "_segundos_de_alerta": "Quando chega pesquisa nova e a da tela ja tem alguma marcacao, a pessoa ganha este tempo para enviar. Sem marcacao a troca e imediata.",
+  "segundos_de_alerta": 30,
+
+  "segundos_de_agradecimento": 10,
+
+  "_limite_da_consulta": "Quantas pendentes cada consulta traz no maximo. Normalmente vem uma ou nenhuma; as que sobrarem saem nas proximas consultas.",
+  "limite_da_consulta": 5,
+
+  "_fuso": "Define o que e 'hoje': so as senhas criadas desde a meia-noite neste fuso entram na consulta.",
+  "fuso": "America/Sao_Paulo",
+
+  "idioma_padrao": "pt",
+
+  "_segundos_pressionando_o_logo": "Tempo segurando o logo da tela de descanso para abrir a manutencao.",
+  "segundos_pressionando_o_logo": 3,
+
+  "_segundos_sem_toque_na_manutencao": "A manutencao fecha sozinha depois deste tempo sem toque. Enquanto ela esta aberta o tablet nao mostra pesquisa, entao esquecer aberta nao pode durar o dia todo.",
+  "segundos_sem_toque_na_manutencao": 120,
+
+  "_grupos": "Uma instalacao atende um grupo. O tablet 3 fica nas mesas 3 e 4 juntas, numa fila so.",
+  "grupos": {
+    "1": { "rotulo": "Mesa 1", "mesas": [1] },
+    "2": { "rotulo": "Mesa 2", "mesas": [2] },
+    "34": { "rotulo": "Mesas 3 e 4", "mesas": [3, 4] }
+  }
+}

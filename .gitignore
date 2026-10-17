@@ -1,0 +1,15 @@
+node_modules/
+.DS_Store
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+*.iml
+
+# Chave de assinatura e senhas: nunca no repositorio (docs/ENTRA.md)
+android/assinatura.properties
+*.jks
+*.keystore

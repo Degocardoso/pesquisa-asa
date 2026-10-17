@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mesmo fundo da tela de descanso, para nao piscar branco ao abrir. -->
+    <style name="Tema" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/fundo</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <color name="fundo">#F5F5F5</color>
+</resources>

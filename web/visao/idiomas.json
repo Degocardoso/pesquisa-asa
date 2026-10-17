@@ -1,0 +1,86 @@
+{
+  "_leia_me": "Textos da interface. Para acrescentar um idioma, copie o bloco 'en', traduza e acrescente o botao em index.html. Nada aqui vai para o CRM. A manutencao e os avisos para a equipe ficam so em portugues: o que faltar em 'en' cai no 'pt'.",
+  "pt": {
+    "pesquisa": {
+      "titulo": "Pesquisa de satisfação",
+      "p1": "1. Qual seu nível de satisfação com o atendimento presencial?",
+      "p2": "<b>2. Como você avalia o domínio do colaborador sobre o assunto tratado?</b> Considere 1 para pouco domínio e 5 para muito domínio.",
+      "p3": "3. Sua necessidade foi resolvida?",
+      "carinha1": "Muito insatisfeito",
+      "carinha2": "Insatisfeito",
+      "carinha3": "Indiferente",
+      "carinha4": "Satisfeito",
+      "carinha5": "Muito satisfeito",
+      "nao": "Não",
+      "aguardando": "Estou aguardando retorno",
+      "sim": "Sim",
+      "enviar": "Enviar resposta",
+      "recusar": "Prefiro não responder",
+      "alertaAntes": "Uma nova pesquisa vai começar em",
+      "alertaDepois": "s. Toque em <b>Enviar resposta</b> para concluir a sua."
+    },
+    "agradecimento": {
+      "respostas": "Agradecemos por suas respostas!",
+      "recusa": "Obrigado pela visita!"
+    },
+    "aviso": {
+      "semRedeTitulo": "Sem conexão",
+      "semRedeTexto": "O tablet perdeu a conexão com a internet. Ele volta sozinho assim que a rede voltar.",
+      "autenticacaoTitulo": "Tablet desconectado",
+      "autenticacaoTexto": "A conta deste tablet precisa entrar de novo. Chame o suporte.",
+      "configuracaoTitulo": "Instalação incompleta",
+      "configuracaoTexto": "Falta configurar o acesso ao CRM neste tablet. Chame o suporte.",
+      "semMesaTitulo": "Tablet sem mesa",
+      "semMesaTexto": "Escolha a mesa na manutenção."
+    },
+    "manutencao": {
+      "titulo": "Manutenção",
+      "digitePin": "Digite o PIN",
+      "pinIncorreto": "PIN incorreto.",
+      "definirPin": "Defina o PIN da manutenção",
+      "definirPinApoio": "Entre 4 e 8 números. Ele protege esta tela.",
+      "confirmarPin": "Digite o mesmo PIN de novo",
+      "pinsDiferentes": "Os dois PINs não conferem. Comece de novo.",
+      "pinCurto": "Use pelo menos 4 números.",
+      "ok": "OK",
+      "apagar": "apagar",
+      "fechar": "Fechar",
+      "mesa": "Mesa atendida",
+      "conta": "Conta do tablet",
+      "nenhumaConta": "nenhuma conta conectada",
+      "entrar": "Entrar",
+      "sairDaConta": "Sair da conta",
+      "trocarPin": "Trocar PIN",
+      "sairDoQuiosque": "Sair do modo quiosque",
+      "sairDoQuiosqueApoio": "Libera o Android até o app ser aberto de novo. Use para atualizar.",
+      "diagnostico": "Diagnóstico",
+      "aguarde": "Aguarde…",
+      "feito": "Feito.",
+      "falhou": "Não deu certo:"
+    }
+  },
+  "en": {
+    "pesquisa": {
+      "titulo": "Satisfaction survey",
+      "p1": "1. How satisfied are you with the in-person service?",
+      "p2": "<b>2. How would you rate the staff member's knowledge of your matter?</b> 1 means little knowledge and 5 means a lot.",
+      "p3": "3. Was your need resolved?",
+      "carinha1": "Very dissatisfied",
+      "carinha2": "Dissatisfied",
+      "carinha3": "Neutral",
+      "carinha4": "Satisfied",
+      "carinha5": "Very satisfied",
+      "nao": "No",
+      "aguardando": "Waiting for a reply",
+      "sim": "Yes",
+      "enviar": "Submit",
+      "recusar": "I'd rather not answer",
+      "alertaAntes": "A new survey will start in",
+      "alertaDepois": "s. Tap <b>Submit</b> to finish yours."
+    },
+    "agradecimento": {
+      "respostas": "Thank you for your answers!",
+      "recusa": "Thank you for your visit!"
+    }
+  }
+}
