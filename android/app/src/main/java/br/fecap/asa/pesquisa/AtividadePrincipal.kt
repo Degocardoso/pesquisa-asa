@@ -49,6 +49,9 @@ class AtividadePrincipal : AppCompatActivity() {
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
             .build()
 
+        // So no build de debug: deixa ver o console do JavaScript pelo Chrome
+        // do computador (chrome://inspect). No APK de producao fica desligado.
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
         webView = WebView(this)
         setContentView(webView)
         webView.settings.apply {

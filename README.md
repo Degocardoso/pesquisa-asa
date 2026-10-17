@@ -22,6 +22,7 @@ derrubar a rede e expirar o login. É onde se mexe na interface e nas regras.
 
 Para gerar o APK, siga, nesta ordem:
 
+0. `docs/TESTAR.md` — como testar no Android Studio, do emulador ao tablet
 1. `docs/ENTRA.md` — registro do aplicativo e chave de assinatura (uma vez só)
 2. Abrir a pasta `android/` no Android Studio e gerar o APK assinado
 3. `docs/QUIOSQUE.md` — preparar cada tablet
