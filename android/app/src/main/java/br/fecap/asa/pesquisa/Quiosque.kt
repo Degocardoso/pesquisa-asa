@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import android.os.UserManager
 import android.provider.Settings
 
 /**
@@ -33,8 +34,13 @@ object Quiosque {
 
     fun eDono(contexto: Context): Boolean = politicas(contexto).isDeviceOwnerApp(contexto.packageName)
 
-    /** Aplicado a cada retorno ao app. Repetir e inofensivo e cobre um reinicio. */
-    fun preparar(atividade: Activity) {
+    /**
+     * Aplicado a cada retorno ao app. Repetir e inofensivo e cobre um reinicio.
+     *
+     * bloquearDepuracao desliga a depuracao USB: com o segredo instalado no
+     * tablet, ninguem deve conseguir ligar um cabo e tirar coisas do aparelho.
+     */
+    fun preparar(atividade: Activity, bloquearDepuracao: Boolean) {
         if (!eDono(atividade)) return
         val dpm = politicas(atividade)
         val admin = administrador(atividade)
@@ -58,6 +64,12 @@ object Quiosque {
             BatteryManager.BATTERY_PLUGGED_USB or
             BatteryManager.BATTERY_PLUGGED_WIRELESS
         dpm.setGlobalSetting(admin, Settings.Global.STAY_ON_WHILE_PLUGGED_IN, naTomada.toString())
+
+        if (bloquearDepuracao) {
+            dpm.addUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
+        } else {
+            dpm.clearUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
+        }
     }
 
     fun entrar(atividade: Activity) {
@@ -67,13 +79,17 @@ object Quiosque {
         }
     }
 
-    /** Libera o tablet para atualizar o app. A tela inicial do Android volta a funcionar. */
+    /**
+     * Libera o tablet para atualizar o app ou trocar o segredo: a tela inicial
+     * do Android e a depuracao USB voltam a funcionar ate o app ser reaberto.
+     */
     fun sair(atividade: Activity) {
         if (eDono(atividade)) {
             val dpm = politicas(atividade)
             val admin = administrador(atividade)
             dpm.clearPackagePersistentPreferredActivities(admin, atividade.packageName)
             dpm.setStatusBarDisabled(admin, false)
+            dpm.clearUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
         }
         atividade.stopLockTask()
     }

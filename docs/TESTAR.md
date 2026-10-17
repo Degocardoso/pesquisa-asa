@@ -73,13 +73,13 @@ Para desfazer no emulador: *Device Manager → ⋮ → Wipe Data*.
 
 ---
 
-## Nível 2 — Emulador com login
+## Nível 2 — Emulador com acesso ao CRM
 
-1. Faça o `docs/ENTRA.md` inteiro: chave, `assinatura.properties`, registro e
-   `msal_config.json`.
-2. Rode de novo. Na manutenção, **Entrar** com a conta de um tablet.
-3. O diagnóstico deve mostrar "Conexão com o CRM: ok" e uma "Última consulta"
-   que se atualiza a cada 5 segundos.
+1. Faça os passos 1 e 2 do `docs/SEGREDO.md` (segredo e usuário de aplicativo).
+2. Com o app aberto no emulador e o PIN definido, rode o comando do passo 3 do
+   `docs/SEGREDO.md` no terminal do Android Studio. O emulador já aceita adb.
+3. O diagnóstico deve mostrar "Acesso ao CRM: segredo do tablet", "Conexão com
+   o CRM: ok" e uma "Última consulta" que se atualiza a cada 5 segundos.
 
 **Cuidado: a partir daqui é o CRM de produção.** Com uma mesa escolhida, o
 emulador pega as pesquisas pendentes de hoje daquela mesa e grava nelas, igual

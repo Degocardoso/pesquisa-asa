@@ -49,16 +49,19 @@ Abra o app. Na primeira vez a manutenção abre sozinha:
 1. Defina o PIN da manutenção (de 4 a 8 números, digitado duas vezes).
 2. Escolha a mesa: tablet 1 → **Mesa 1**, tablet 2 → **Mesa 2**, tablet 3 →
    **Mesas 3 e 4**.
-3. **Entrar** com a conta do tablet (`tablet01`, `tablet02` ou `tablet03`).
-4. Feche. A partir daí o app trava o tablet.
+3. Feche a manutenção.
+4. Com o tablet ainda no cabo, instale a credencial: passo 3 do
+   `docs/SEGREDO.md`. (No modo por conta, em vez disso, toque em **Entrar** na
+   manutenção com a conta do tablet.)
 
 Confira no diagnóstico da manutenção: "Modo quiosque: ativo (dono do
-dispositivo)" e "Conexão com o CRM: ok".
+dispositivo)", "Acesso ao CRM: segredo do tablet" e "Conexão com o CRM: ok".
 
-## Passo 4 — Desligar a depuração USB
+## Passo 4 — Depuração USB
 
-Configurações → Opções do desenvolvedor → Depuração USB desligada. Para
-atualizar depois, religue pelo mesmo caminho (veja abaixo).
+Não precisa desligar à mão: com PIN, mesa e credencial instalados, o próprio
+app bloqueia a depuração USB na próxima abertura. Para atualizar depois, a
+manutenção libera (veja abaixo).
 
 ---
 
@@ -70,12 +73,13 @@ toque — enquanto está aberta o tablet não mostra pesquisa.
 
 ## Atualizar o app
 
-1. Manutenção → **Sair do modo quiosque**. O Android fica livre até você voltar
-   ao app.
-2. Religue a depuração USB e rode `adb install -r pesquisa-asa.apk`. Tem que ser
-   assinado com a mesma chave (`docs/ENTRA.md`).
-3. Abra o app de novo: o quiosque volta sozinho. Mesa, PIN e conta continuam
-   lá.
+1. Manutenção → **Sair do modo quiosque**. O Android e a depuração USB ficam
+   livres até você voltar ao app. Ligue a depuração nas opções do
+   desenvolvedor (o bloqueio a terá desligado).
+2. Rode `adb install -r pesquisa-asa.apk`. Tem que ser assinado com a mesma
+   chave (`docs/ENTRA.md`, passo 1).
+3. Abra o app de novo: o quiosque e o bloqueio da depuração voltam sozinhos.
+   Mesa, PIN e credencial continuam lá: atualizar o app não apaga os dados dele.
 
 ## Trocar a conta ou a mesa
 
@@ -86,6 +90,6 @@ Pela manutenção. Não precisa reinstalar nada.
 | Mensagem | O que fazer |
 |---|---|
 | Sem conexão | Nada: volta sozinho quando o Wi-Fi voltar. Se persistir, ver o Wi-Fi. |
-| Tablet desconectado | Manutenção → Sair da conta → Entrar de novo. |
-| Instalação incompleta | O `msal_config.json` do APK não foi preenchido (`docs/ENTRA.md`). |
+| Tablet desconectado | O CRM recusou o acesso: ver o usuário de aplicativo e o papel (`docs/SEGREDO.md`, passo 2). No modo por conta: Sair da conta → Entrar de novo. |
+| Instalação incompleta | Credencial ausente, errada ou vencida: ver "Último erro" no diagnóstico e `docs/SEGREDO.md`. |
 | Tablet sem mesa | Manutenção → escolher a mesa. |
