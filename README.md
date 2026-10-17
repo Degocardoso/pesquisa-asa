@@ -22,7 +22,9 @@ derrubar a rede e expirar o login. É onde se mexe na interface e nas regras.
 
 Para gerar o APK, siga, nesta ordem:
 
-1. `docs/ENTRA.md` — registro do aplicativo e chave de assinatura (uma vez só)
+0. `docs/TESTAR.md` — como testar no Android Studio, do emulador ao tablet
+1. `docs/SEGREDO.md` — segredo do aplicativo e usuário no CRM (uma vez só);
+   a chave de assinatura do APK está no passo 1 do `docs/ENTRA.md`
 2. Abrir a pasta `android/` no Android Studio e gerar o APK assinado
 3. `docs/QUIOSQUE.md` — preparar cada tablet
 
@@ -38,7 +40,8 @@ Para gerar o APK, siga, nesta ordem:
 | Nome de coluna ou código de opção do CRM | `web/modelo/entidades.js` |
 | Regras de encerramento | `web/modelo/pesquisa.js` |
 | Endereço do Dataverse | `android/app/src/main/res/values/configuracao.xml` |
-| IDs do Entra | `android/app/src/main/res/raw/msal_config.json` |
+| Credencial de acesso (segredo) | instalada em cada tablet pelo adb (`docs/SEGREDO.md`) |
+| IDs do Entra, só no modo por conta | `android/app/src/main/res/raw/msal_config.json` |
 | Qual mesa este tablet atende, PIN | tela de manutenção do próprio tablet |
 
 Nenhum nome lógico de coluna aparece fora do `entidades.js`. Se alguém renomear
@@ -104,7 +107,12 @@ docs/                       Entra, quiosque
 ```
 
 A casca Android não tem regra de negócio. Ela faz o que o navegador não
-consegue: login com MSAL, chamada HTTP ao Dataverse com o token (o token nunca
-passa pelo JavaScript), quiosque, tela acesa, e guarda mesa e PIN.
+consegue: o token de acesso, a chamada HTTP ao Dataverse (o token nunca passa
+pelo JavaScript), quiosque, tela acesa, e guarda mesa, PIN e credencial.
+
+O acesso ao CRM é por **segredo de aplicativo próprio dos tablets**, instalado
+em cada aparelho pelo adb e nunca dentro do APK (`docs/SEGREDO.md`). O login
+com a conta do tablet (MSAL) continua disponível como alternativa
+(`docs/ENTRA.md`).
 
 Antes de mexer, leia `CONTINUIDADE.md`.

@@ -22,7 +22,7 @@ class Ponte(
     private val atividade: AtividadePrincipal,
     private val webView: WebView,
     private val instalacao: Instalacao,
-    private val autenticacao: Autenticacao,
+    private val autenticacao: AutenticacaoEscolhida,
     private val dataverse: ClienteDataverse,
 ) {
     private val executor = Executors.newCachedThreadPool()
@@ -76,6 +76,8 @@ class Ponte(
         .put("grupo", instalacao.grupo ?: JSONObject.NULL)
         .put("temPin", instalacao.temPin)
         .put("conta", autenticacao.contaAtual() ?: JSONObject.NULL)
+        .put("acesso", autenticacao.modo)
+        .put("segredoVenceEm", autenticacao.segredoVenceEm() ?: JSONObject.NULL)
         .put("quiosque", Quiosque.estado(atividade))
         .put("versao", BuildConfig.VERSION_NAME)
 

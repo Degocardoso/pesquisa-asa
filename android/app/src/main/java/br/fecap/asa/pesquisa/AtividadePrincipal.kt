@@ -1,6 +1,7 @@
 package br.fecap.asa.pesquisa
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import android.webkit.WebResourceRequest
@@ -8,6 +9,7 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -28,6 +30,9 @@ class AtividadePrincipal : AppCompatActivity() {
     private lateinit var webView: WebView
     private lateinit var ponte: Ponte
     private lateinit var rede: Rede
+    private lateinit var instalacao: Instalacao
+    private lateinit var cofre: Cofre
+    private lateinit var autenticacao: AutenticacaoEscolhida
 
     // Ligado pela manutencao para atualizar o app. Volta a desligar quando a
     // pessoa sai do app e retorna a ele (onRestart).
@@ -39,8 +44,9 @@ class AtividadePrincipal : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val ambiente = getString(R.string.ambiente_dataverse)
-        val autenticacao = Autenticacao(applicationContext, ambiente).also { it.iniciar() }
-        val instalacao = Instalacao(applicationContext)
+        instalacao = Instalacao(applicationContext)
+        cofre = Cofre(applicationContext)
+        autenticacao = AutenticacaoEscolhida(applicationContext, cofre, ambiente).also { it.iniciar() }
         val dataverse = ClienteDataverse(ambiente, getString(R.string.versao_da_api), autenticacao)
 
         // Servir a interface por https em vez de file:// e o que permite
@@ -49,6 +55,9 @@ class AtividadePrincipal : AppCompatActivity() {
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
             .build()
 
+        // So no build de debug: deixa ver o console do JavaScript pelo Chrome
+        // do computador (chrome://inspect). No APK de producao fica desligado.
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
         webView = WebView(this)
         setContentView(webView)
         webView.settings.apply {
@@ -85,17 +94,27 @@ class AtividadePrincipal : AppCompatActivity() {
         }
         rede.iniciar()
 
+        receberCredencial(intent)
+
         // Voltar nao faz nada: nao ha para onde voltar.
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {}
         })
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        receberCredencial(intent)
+    }
+
     override fun onResume() {
         super.onResume()
         esconderBarras()
         if (!quiosqueSuspenso) {
-            Quiosque.preparar(this)
+            // A depuracao USB so e bloqueada com a instalacao completa: antes
+            // disso o adb ainda e o caminho para instalar a credencial.
+            val instalacaoCompleta = instalacao.temPin && instalacao.grupo != null && cofre.temCredencial
+            Quiosque.preparar(this, bloquearDepuracao = instalacaoCompleta)
             Quiosque.entrar(this)
         }
     }
@@ -116,6 +135,52 @@ class AtividadePrincipal : AppCompatActivity() {
         super.onDestroy()
     }
 
+    /**
+     * Instala ou apaga a credencial de aplicativo vinda do adb
+     * (docs/SEGREDO.md). Com PIN ja definido, o comando tem que trazer o PIN:
+     * sem isso qualquer app no tablet poderia trocar a credencial.
+     */
+    private fun receberCredencial(pedido: Intent?) {
+        if (pedido == null) return
+        val apagar = pedido.getBooleanExtra(EXTRA_APAGAR, false)
+        val segredo = pedido.getStringExtra(EXTRA_SEGREDO)
+        if (!apagar && segredo == null) return
+
+        // O segredo nao fica guardado no Intent da atividade depois de lido.
+        setIntent(Intent(pedido).apply { removeExtra(EXTRA_SEGREDO) })
+
+        if (instalacao.temPin && !instalacao.conferirPin(pedido.getStringExtra(EXTRA_PIN))) {
+            avisar("PIN incorreto: nada foi alterado.")
+            return
+        }
+
+        if (apagar) {
+            cofre.apagar()
+            autenticacao.esquecerToken()
+            avisar("Credencial apagada. O tablet volta a usar a conta (login).")
+        } else {
+            val tenant = pedido.getStringExtra(EXTRA_TENANT)
+            val cliente = pedido.getStringExtra(EXTRA_CLIENTE)
+            val venceEm = pedido.getStringExtra(EXTRA_VENCE_EM)
+            if (tenant.isNullOrBlank() || cliente.isNullOrBlank() || segredo.isNullOrBlank()) {
+                avisar("Faltou tenant, cliente ou segredo: nada foi alterado.")
+                return
+            }
+            if (venceEm != null && !FORMATO_DE_DATA.matches(venceEm)) {
+                avisar("venceEm deve estar no formato aaaa-mm-dd: nada foi alterado.")
+                return
+            }
+            cofre.guardar(Cofre.Credencial(tenant.trim(), cliente.trim(), segredo.trim(), venceEm))
+            autenticacao.esquecerToken()
+            avisar("Credencial instalada.")
+        }
+        ponte.evento("credencial", JSONObject())
+    }
+
+    private fun avisar(texto: String) {
+        Toast.makeText(this, texto, Toast.LENGTH_LONG).show()
+    }
+
     fun suspenderQuiosque() {
         quiosqueSuspenso = true
         Quiosque.sair(this)
@@ -131,5 +196,12 @@ class AtividadePrincipal : AppCompatActivity() {
 
     companion object {
         const val HOST = "appassets.androidplatform.net"
+        private const val EXTRA_TENANT = "tenant"
+        private const val EXTRA_CLIENTE = "cliente"
+        private const val EXTRA_SEGREDO = "segredo"
+        private const val EXTRA_VENCE_EM = "venceEm"
+        private const val EXTRA_PIN = "pin"
+        private const val EXTRA_APAGAR = "apagarCredencial"
+        private val FORMATO_DE_DATA = Regex("^\\d{4}-\\d{2}-\\d{2}$")
     }
 }

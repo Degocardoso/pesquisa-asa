@@ -179,8 +179,10 @@ export class Manutencao {
     });
 
     $("#conta-atual").textContent = this._instalacao.conta || this._textos.t("manutencao.nenhumaConta");
-    $("#btn-entrar").hidden = Boolean(this._instalacao.conta);
-    $("#btn-sair-conta").hidden = !this._instalacao.conta;
+    // Com segredo de aplicativo nao ha login: a credencial entra e sai pelo adb.
+    const porSegredo = this._instalacao.acesso === "segredo";
+    $("#btn-entrar").hidden = porSegredo || Boolean(this._instalacao.conta);
+    $("#btn-sair-conta").hidden = porSegredo || !this._instalacao.conta;
     $("#btn-sair-quiosque").hidden = !this._instalacao.quiosque || this._instalacao.quiosque.startsWith("inativo");
     this._desenharDiagnostico();
   }
@@ -209,7 +211,9 @@ export class Manutencao {
     const linhas = [
       `Versao do app ........ ${i.versao || "-"}`,
       `Modo quiosque ........ ${i.quiosque || "-"}`,
+      `Acesso ao CRM ........ ${i.acesso === "segredo" ? "segredo do tablet" : i.acesso === "conta" ? "conta do tablet (login)" : i.acesso || "-"}`,
       `Conta ................ ${i.conta || "nenhuma"}`,
+      ...(i.segredoVenceEm ? [`Segredo vence em ..... ${descreverVencimento(i.segredoVenceEm)}`] : []),
       `Grupo ................ ${i.grupo ? this._config.grupos[i.grupo].rotulo : "nao escolhido"}`,
     ];
     if (d) {
@@ -236,6 +240,16 @@ export class Manutencao {
     this._inatividade = setTimeout(() => this.fechar(),
       this._config.segundos_sem_toque_na_manutencao * 1000);
   }
+}
+
+// O segredo do Entra vence (no maximo 24 meses) e, vencido, o tablet para.
+// Mostrar quantos dias faltam e a unica forma de nao ser surpresa.
+function descreverVencimento(aaaammdd) {
+  const [a, m, d] = aaaammdd.split("-").map(Number);
+  const dias = Math.ceil((Date.UTC(a, m - 1, d) - Date.now()) / 86400000);
+  const data = `${String(d).padStart(2, "0")}/${String(m).padStart(2, "0")}/${a}`;
+  if (dias < 0) return `${data} (VENCIDO ha ${-dias} dia(s))`;
+  return `${data} (faltam ${dias} dia(s)${dias <= 30 ? " - TROCAR JA" : ""})`;
 }
 
 function mensagemDe(erro) {

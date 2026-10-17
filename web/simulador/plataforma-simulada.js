@@ -30,6 +30,8 @@ export class PlataformaSimulada {
       grupo: this._dados.grupo,
       temPin: Boolean(this._dados.pin),
       conta: this._dados.conta,
+      acesso: "conta",
+      segredoVenceEm: null,
       quiosque: "inativo (simulador)",
       versao: "simulador",
     };

@@ -42,7 +42,7 @@ export class PlataformaAndroid {
 
   // -- contrato -----------------------------------------------------------
 
-  // { grupo, temPin, conta, quiosque, versao }
+  // { grupo, temPin, conta, acesso ("segredo" | "conta"), segredoVenceEm, quiosque, versao }
   instalacao() { return this._chamar("instalacao"); }
 
   conferirPin(pin) { return this._chamar("conferirPin", { pin }); }

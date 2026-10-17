@@ -25,7 +25,12 @@ conferida contra a mais recente.
 teste no formato (filtro, colunas, corpo, PATCH com `If-Match`), não contra o
 Dataverse.
 
-**Falta para o primeiro APK:** o registro no Entra (`docs/ENTRA.md`).
+**Compilado e rodando no emulador** desde 17/10/2026, com o modo por conta
+chegando até o login da Microsoft. O modo por segredo foi escrito depois e
+ainda não foi compilado.
+
+**Falta para o primeiro teste real:** segredo e usuário de aplicativo no CRM
+(`docs/SEGREDO.md`).
 
 ---
 
@@ -75,6 +80,16 @@ no CRM e o prazo de 30 minutos a encerra.
 **Erro definitivo do CRM (400, 404) descarta a gravação.** Repetir um pedido que
 o CRM considera errado só encheria a fila. O erro fica no diagnóstico.
 
+**Acesso por segredo de aplicativo próprio dos tablets**, decidido em outubro
+de 2026 porque o consentimento do administrador para o login por conta não
+estava disponível. Ressalvas aceitas: o segredo vence (máx. 24 meses) e quem o
+tiver entra no CRM de qualquer lugar. Mitigações: registro só dos tablets
+(nunca o do totem, para um vazamento não derrubar o totem), papel mínimo no
+CRM (só ler e gravar `ret_relacionamento`), segredo **fora do APK** (instalado
+pelo adb e cifrado com chave do Android Keystore), depuração USB bloqueada
+depois da instalação, vencimento visível no diagnóstico. O modo por conta
+continua no código; apagar a credencial volta a ele.
+
 **O token nunca passa pelo JavaScript.** A chamada HTTP é feita pela casca
 (`ClienteDataverse.kt`), que só aceita caminho relativo e monta a URL com o
 endereço do ambiente. Isso também evita depender de CORS no WebView.
@@ -82,7 +97,7 @@ endereço do ambiente. Isso também evita depender de CORS no WebView.
 **O PIN não vai para o JavaScript guardado**, só digitado. A casca guarda hash
 com sal e confere a cada ação protegida, como o totem faz no Python.
 
-**Login dentro do app (`WEBVIEW`)**, não pelo navegador: com o quiosque ativo o
+**No modo por conta, login dentro do app (`WEBVIEW`)**, não pelo navegador: com o quiosque ativo o
 Android não deixa abrir outro app.
 
 **Um APK para os três tablets.** O grupo de mesas é escolhido na manutenção e
@@ -95,7 +110,10 @@ aberta o ciclo fica parado; esquecida aberta, o tablet ficaria sem pesquisa.
 
 ## Onde ficou dívida
 
-**Casca Android nunca compilada** (ver Situação).
+**O modo por segredo nunca foi compilado nem testado** (ver Situação).
+
+**Lembrete do vencimento do segredo** depende de alguém olhar o diagnóstico
+ou da agenda. Não há aviso automático por e-mail.
 
 **Nunca houve gravação real no CRM.** A primeira semana deve ser acompanhada
 pelo diagnóstico da manutenção ("Último erro") e por uma conferência das

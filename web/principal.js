@@ -98,8 +98,10 @@ async function iniciar() {
     await manutencao.abrir();
   }
 
-  // A rede voltou: nao esperar o proximo intervalo.
+  // A rede voltou, ou uma credencial nova foi instalada: nao esperar o
+  // proximo intervalo.
   plataforma.aoEvento("rede", (estado) => { if (estado && estado.online && ciclo) ciclo.consultarAgora(); });
+  plataforma.aoEvento("credencial", () => { if (ciclo) ciclo.consultarAgora(); });
 
   const instalacao = await plataforma.instalacao();
   if (!window.PonteAndroid) {

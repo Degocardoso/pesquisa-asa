@@ -2,129 +2,46 @@ package br.fecap.asa.pesquisa
 
 import android.app.Activity
 import android.content.Context
-import com.microsoft.identity.client.AcquireTokenSilentParameters
-import com.microsoft.identity.client.AuthenticationCallback
-import com.microsoft.identity.client.IAuthenticationResult
-import com.microsoft.identity.client.IPublicClientApplication
-import com.microsoft.identity.client.ISingleAccountPublicClientApplication
-import com.microsoft.identity.client.PublicClientApplication
-import com.microsoft.identity.client.SignInParameters
-import com.microsoft.identity.client.exception.MsalClientException
-import com.microsoft.identity.client.exception.MsalException
-import com.microsoft.identity.client.exception.MsalUiRequiredException
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 /**
- * Login do tablet com a conta da instituicao (tablet01, tablet02, tablet03),
- * pela biblioteca oficial MSAL. Nenhum segredo fica no app.
+ * De onde vem o token que vai para o Dataverse.
  *
- * Registro no Entra como aplicativo movel (cliente publico), nunca SPA: o token
- * de atualizacao de SPA dura 24 horas fixas; o de aplicativo movel dura 90 dias
- * e renova a cada uso, entao um tablet em uso nao pede login de novo.
- *
- * Os metodos sincronos (token, sair, contaAtual) rodam nas threads da Ponte,
- * nunca na thread da tela: o MSAL proibe chamada sincrona nela.
+ * Dois modos, escolhidos pelo que esta instalado no tablet:
+ *   segredo  credencial de aplicativo propria dos tablets, instalada pelo adb
+ *            (AutenticacaoPorSegredo, docs/SEGREDO.md)
+ *   conta    login com a conta do tablet pelo MSAL (AutenticacaoPorConta,
+ *            docs/ENTRA.md)
  */
-class Autenticacao(private val contexto: Context, ambiente: String) {
+interface Autenticacao {
+    val modo: String
+    fun token(): String
+    fun contaAtual(): String?
+    fun entrar(atividade: Activity, aoTerminar: (Result<String>) -> Unit)
+    fun sair()
+    fun esquecerToken()
+}
 
-    private val escopos = listOf("${ambiente.trimEnd('/')}/user_impersonation")
+/**
+ * Decide o modo a cada chamada, e nao uma vez na abertura: a credencial pode
+ * ser instalada ou apagada pelo adb com o app aberto, e o modo novo vale ja na
+ * consulta seguinte.
+ */
+class AutenticacaoEscolhida(contexto: Context, private val cofre: Cofre, ambiente: String) : Autenticacao {
 
-    @Volatile private var aplicacao: ISingleAccountPublicClientApplication? = null
-    @Volatile private var falhaAoIniciar: String? = null
-    private val pronta = CountDownLatch(1)
+    private val porConta = AutenticacaoPorConta(contexto, ambiente)
+    private val porSegredo = AutenticacaoPorSegredo(cofre, ambiente)
 
-    fun iniciar() {
-        try {
-            PublicClientApplication.createSingleAccountPublicClientApplication(
-                contexto,
-                R.raw.msal_config,
-                object : IPublicClientApplication.ISingleAccountApplicationCreatedListener {
-                    override fun onCreated(application: ISingleAccountPublicClientApplication) {
-                        aplicacao = application
-                        pronta.countDown()
-                    }
+    private val atual: Autenticacao get() = if (cofre.temCredencial) porSegredo else porConta
 
-                    override fun onError(exception: MsalException) {
-                        falhaAoIniciar = exception.message
-                        pronta.countDown()
-                    }
-                },
-            )
-        } catch (erro: Exception) {
-            falhaAoIniciar = erro.message
-            pronta.countDown()
-        }
-    }
+    fun iniciar() = porConta.iniciar()
 
-    private fun msal(): ISingleAccountPublicClientApplication {
-        pronta.await(ESPERA_PELO_MSAL_EM_SEGUNDOS, TimeUnit.SECONDS)
-        return aplicacao ?: throw ErroDaPonte(
-            "configuracao",
-            "Login nao configurado (${falhaAoIniciar ?: "o MSAL nao respondeu"}). Veja docs/ENTRA.md.",
-        )
-    }
+    override val modo: String get() = atual.modo
+    override fun token() = atual.token()
+    override fun contaAtual() = atual.contaAtual()
+    override fun entrar(atividade: Activity, aoTerminar: (Result<String>) -> Unit) = atual.entrar(atividade, aoTerminar)
+    override fun sair() = atual.sair()
+    override fun esquecerToken() = atual.esquecerToken()
 
-    fun contaAtual(): String? = try {
-        msal().currentAccount.currentAccount?.username
-    } catch (erro: Exception) {
-        null
-    }
-
-    fun token(): String {
-        val app = msal()
-        val conta = app.currentAccount.currentAccount
-            ?: throw ErroDaPonte("autenticacao", "Nenhuma conta conectada neste tablet.")
-        val parametros = AcquireTokenSilentParameters.Builder()
-            .forAccount(conta)
-            .fromAuthority(conta.authority)
-            .withScopes(escopos)
-            .build()
-        try {
-            return app.acquireTokenSilent(parametros).accessToken
-        } catch (erro: MsalUiRequiredException) {
-            throw ErroDaPonte("autenticacao", "O login do tablet expirou. Entre de novo pela manutencao.")
-        } catch (erro: MsalClientException) {
-            // Sem rede o MSAL nao consegue renovar o token. Isso nao e login
-            // vencido: a tela tem que dizer "sem conexao", nao "chame o suporte".
-            if (erro.errorCode in CODIGOS_DE_REDE) throw ErroDaPonte("rede", erro.message ?: "Sem rede.")
-            throw ErroDaPonte("autenticacao", erro.message ?: erro.errorCode)
-        } catch (erro: MsalException) {
-            throw ErroDaPonte("autenticacao", erro.message ?: erro.errorCode)
-        }
-    }
-
-    /** Login interativo, pedido pela manutencao. Abre a tela da Microsoft dentro do app. */
-    fun entrar(atividade: Activity, aoTerminar: (Result<String>) -> Unit) {
-        val app = msal()
-        atividade.runOnUiThread {
-            val parametros = SignInParameters.builder()
-                .withActivity(atividade)
-                .withScopes(escopos)
-                .withCallback(object : AuthenticationCallback {
-                    override fun onSuccess(resultado: IAuthenticationResult) {
-                        aoTerminar(Result.success(resultado.account.username))
-                    }
-
-                    override fun onError(erro: MsalException) {
-                        aoTerminar(Result.failure(ErroDaPonte("autenticacao", erro.message ?: erro.errorCode)))
-                    }
-
-                    override fun onCancel() {
-                        aoTerminar(Result.failure(ErroDaPonte("erro", "Login cancelado.")))
-                    }
-                })
-                .build()
-            app.signIn(parametros)
-        }
-    }
-
-    fun sair() {
-        msal().signOut()
-    }
-
-    private companion object {
-        const val ESPERA_PELO_MSAL_EM_SEGUNDOS = 20L
-        val CODIGOS_DE_REDE = setOf("device_network_not_available", "io_error")
-    }
+    /** Data de vencimento informada ao instalar o segredo (aaaa-mm-dd), ou null. */
+    fun segredoVenceEm(): String? = if (cofre.temCredencial) cofre.ler()?.venceEm else null
 }
