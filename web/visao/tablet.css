@@ -1,0 +1,367 @@
+/* =========================================================================
+   Pesquisa ASA — folha de estilo
+
+   Mesma paleta do totem, conferida contra os PNGs do layout: verde escuro
+   rgb(2,51,39), verde vivo rgb(0,227,135), fundo rgb(245,245,245).
+
+   O layout e desenhado num palco de 1600x1000 (o layout veio em 8000x5000,
+   16:10) e escalado por transform para o tablet. As medidas do layout entram
+   divididas por 5, sem outra conversao.
+   ========================================================================= */
+
+:root {
+  --verde-escuro: #023327;
+  --verde-vivo:   #00e387;
+  --fundo:        #f5f5f5;
+  --branco:       #ffffff;
+  --tinta:        #023327;
+  --tinta-fraca:  #5d6f6a;
+  --linha:        #9eb9b0;
+  --vermelho:     #b3261e;
+
+  /* Se as fontes da marca forem instaladas em visao/assets/fontes, troque aqui. */
+  --sans: "Poppins", "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Varios componentes definem display, o que anula o [hidden] do HTML.
+   Esta regra devolve ao atributo a ultima palavra. */
+[hidden] { display: none !important; }
+
+html, body {
+  height: 100%;
+  background: var(--fundo);
+  font-family: var(--sans);
+  color: var(--tinta);
+  overflow: hidden;
+  /* Num tablet publico nada disso pode acontecer. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+#palco {
+  position: absolute;
+  top: 0; left: 0;
+  width: 1600px;
+  height: 1000px;
+  transform-origin: top left;
+  overflow: hidden;
+  background: var(--fundo);
+}
+
+.tela { position: absolute; inset: 0; }
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.leitor {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+
+/* -------------------------------------------------------------------------
+   1. Descanso e avisos
+   ------------------------------------------------------------------------- */
+
+#tela-descanso { background: var(--fundo); }
+
+.logo-descanso {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 720px;
+  transform: translate(-50%, -50%);
+  transition: top .3s, width .3s;
+}
+
+/* Com aviso, o logo sobe e encolhe para dar lugar ao texto. */
+#tela-descanso.com-aviso .logo-descanso { top: 33%; width: 480px; }
+
+.aviso {
+  position: absolute;
+  left: 50%; top: 56%;
+  width: 900px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+.aviso h2 { font-size: 44px; font-weight: 700; margin-bottom: 14px; }
+.aviso p  { font-size: 26px; color: var(--tinta-fraca); line-height: 1.4; }
+
+
+/* -------------------------------------------------------------------------
+   2. Pesquisa
+   ------------------------------------------------------------------------- */
+
+#tela-pesquisa { background: var(--branco); }
+
+.topo {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%;
+  height: 140px;
+  background: var(--verde-escuro);
+  border-bottom: 7px solid var(--verde-vivo);
+}
+.topo h1 {
+  position: absolute;
+  left: 100px; top: 64px;
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .72);
+}
+
+.idiomas {
+  position: absolute;
+  right: 100px; top: 54px;
+  display: flex;
+  gap: 10px;
+}
+.idioma {
+  width: 70px; height: 44px;
+  border-radius: 22px;
+  border: 2px solid rgba(255, 255, 255, .35);
+  color: rgba(255, 255, 255, .72);
+  font-size: 18px;
+  font-weight: 600;
+}
+.idioma.is-ativo {
+  background: var(--verde-vivo);
+  border-color: var(--verde-vivo);
+  color: var(--verde-escuro);
+}
+
+.faixa-alerta {
+  position: absolute;
+  left: 0; top: 140px;
+  width: 100%;
+  height: 46px;
+  background: #fff4cc;
+  border-bottom: 2px solid #f0c94a;
+  font-size: 21px;
+  line-height: 44px;
+  text-align: center;
+  color: var(--tinta);
+}
+.faixa-alerta b { font-weight: 700; }
+
+.pergunta {
+  position: absolute;
+  left: 100px;
+  width: 1400px;
+}
+.pergunta h2 {
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1;
+  height: 52px;
+}
+.pergunta h2.pergunta-longa {
+  font-weight: 400;
+  line-height: 27px;
+  height: 78px;
+}
+.pergunta h2 b { font-weight: 700; }
+
+.cartao {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 96px;
+  border: 1.5px solid var(--linha);
+  border-radius: 48px;
+  background: var(--fundo);
+  padding: 0 60px;
+}
+.cartao-alto { height: 112px; border-radius: 56px; padding: 0 140px; justify-content: space-between; }
+
+.opcao {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  /* Alvo de toque maior que o desenho: o cartao inteiro responde. */
+  min-width: 200px;
+}
+.icone {
+  display: block;
+  width: 64px; height: 64px;
+  background-color: var(--verde-escuro);
+  -webkit-mask: center / contain no-repeat;
+  mask: center / contain no-repeat;
+  transition: background-color .15s, transform .15s;
+}
+.estrela .icone   { width: 60px; height: 56px; }
+.rotulada .icone  { width: 62px; height: 60px; margin-bottom: 8px; }
+.rotulo { font-size: 18px; line-height: 1; color: var(--tinta); }
+.estrela .rotulo  { font-size: 16px; margin-top: 2px; }
+
+.opcao.is-marcada .icone   { background-color: var(--verde-vivo); transform: scale(1.06); }
+.opcao.is-marcada .rotulo  { color: var(--verde-vivo); }
+
+.i-carinha-1 { -webkit-mask-image: url(assets/icones/carinha-1.png); mask-image: url(assets/icones/carinha-1.png); }
+.i-carinha-2 { -webkit-mask-image: url(assets/icones/carinha-2.png); mask-image: url(assets/icones/carinha-2.png); }
+.i-carinha-3 { -webkit-mask-image: url(assets/icones/carinha-3.png); mask-image: url(assets/icones/carinha-3.png); }
+.i-carinha-4 { -webkit-mask-image: url(assets/icones/carinha-4.png); mask-image: url(assets/icones/carinha-4.png); }
+.i-carinha-5 { -webkit-mask-image: url(assets/icones/carinha-5.png); mask-image: url(assets/icones/carinha-5.png); }
+.i-estrela   { -webkit-mask-image: url(assets/icones/estrela.png);   mask-image: url(assets/icones/estrela.png); }
+.i-nao       { -webkit-mask-image: url(assets/icones/nao.png);       mask-image: url(assets/icones/nao.png); }
+.i-aguardando{ -webkit-mask-image: url(assets/icones/aguardando.png);mask-image: url(assets/icones/aguardando.png); }
+.i-sim       { -webkit-mask-image: url(assets/icones/sim.png);       mask-image: url(assets/icones/sim.png); }
+
+.acoes {
+  position: absolute;
+  left: 0; top: 800px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+}
+
+.botao {
+  height: 66px;
+  padding: 0 34px;
+  border-radius: 33px;
+  font-size: 26px;
+  font-weight: 700;
+}
+.botao-primario   { background: var(--verde-vivo); color: var(--verde-escuro); }
+.botao-secundario { border: 2px solid var(--linha); color: var(--tinta-fraca); font-weight: 500; font-size: 22px; }
+.botao:active     { transform: scale(.97); }
+.botao.pequeno    { height: 54px; font-size: 20px; padding: 0 26px; }
+
+.logo-rodape {
+  position: absolute;
+  left: 50%; top: 908px;
+  width: 176px;
+  transform: translateX(-50%);
+}
+
+
+/* -------------------------------------------------------------------------
+   3. Agradecimento
+   ------------------------------------------------------------------------- */
+
+#tela-agradecimento { background: var(--verde-escuro); }
+
+.texto-agradecimento {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 1000px;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--branco);
+  font-size: 76px;
+  font-weight: 600;
+  line-height: 1.12;
+}
+.logo-negativo { width: 290px; top: 860px; }
+
+
+/* -------------------------------------------------------------------------
+   Manutencao
+   ------------------------------------------------------------------------- */
+
+.manutencao { background: var(--fundo); z-index: 10; }
+
+.botao-topo {
+  position: absolute;
+  right: 100px; top: 48px;
+  height: 52px;
+  padding: 0 28px;
+  border-radius: 26px;
+  border: 2px solid rgba(255, 255, 255, .45);
+  color: var(--branco);
+  font-size: 20px;
+}
+
+.etapa-pin {
+  position: absolute;
+  left: 50%; top: 175px;
+  width: 520px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+.etapa-pin h2 { font-size: 32px; margin-bottom: 8px; }
+.apoio { font-size: 18px; color: var(--tinta-fraca); }
+.visor-pin {
+  height: 64px;
+  margin: 18px 0 4px;
+  font-size: 44px;
+  letter-spacing: 14px;
+}
+.erro { height: 26px; color: var(--vermelho); font-size: 19px; }
+
+.teclado {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+.tecla {
+  height: 84px;
+  border-radius: 20px;
+  background: var(--branco);
+  border: 1.5px solid var(--linha);
+  font-size: 34px;
+  font-weight: 600;
+}
+.tecla:active { background: var(--verde-vivo); }
+.tecla-acao { font-size: 22px; }
+
+.etapa-painel {
+  position: absolute;
+  left: 100px; top: 180px;
+  width: 1400px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px 60px;
+}
+.bloco h3 {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  margin-bottom: 12px;
+}
+.grupos, .linha-botoes { display: flex; gap: 14px; flex-wrap: wrap; }
+.grupo {
+  height: 64px;
+  padding: 0 28px;
+  border-radius: 32px;
+  border: 2px solid var(--linha);
+  font-size: 22px;
+  font-weight: 600;
+}
+.grupo.is-ativo { background: var(--verde-escuro); border-color: var(--verde-escuro); color: var(--branco); }
+.conta { font-size: 22px; margin-bottom: 12px; }
+.retorno { margin-top: 10px; font-size: 18px; min-height: 24px; }
+.bloco-diagnostico { grid-column: 1 / -1; }
+#diagnostico {
+  height: 300px;
+  overflow: auto;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: var(--branco);
+  border: 1.5px solid var(--linha);
+  font: 15px/1.45 ui-monospace, "Roboto Mono", monospace;
+  white-space: pre-wrap;
+  user-select: text;
+  -webkit-user-select: text;
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Pesquisa ASA</title>
+  <link rel="stylesheet" href="visao/tablet.css">
+</head>
+<body>
+
+<div id="palco">
+
+  <!-- 1. DESCANSO (tambem mostra os avisos de conexao para a equipe) -->
+  <section id="tela-descanso" class="tela">
+    <img id="logo-descanso" class="logo-descanso" src="visao/assets/logo-asa.png" alt="ASA FECAP" draggable="false">
+    <div id="aviso" class="aviso" hidden>
+      <h2 id="aviso-titulo"></h2>
+      <p id="aviso-texto"></p>
+    </div>
+  </section>
+
+  <!-- 2. PESQUISA -->
+  <section id="tela-pesquisa" class="tela" hidden>
+    <header class="topo">
+      <h1 data-texto="pesquisa.titulo"></h1>
+      <div class="idiomas">
+        <button class="idioma" data-idioma="pt">PT</button>
+        <button class="idioma" data-idioma="en">EN</button>
+      </div>
+    </header>
+
+    <div id="faixa-alerta" class="faixa-alerta" hidden>
+      <span data-texto="pesquisa.alertaAntes"></span>
+      <b id="contagem-alerta"></b><span data-html="pesquisa.alertaDepois"></span>
+    </div>
+
+    <div class="pergunta" style="top: 190px">
+      <h2 data-texto="pesquisa.p1"></h2>
+      <div class="cartao" data-pergunta="atendimento">
+        <button class="opcao" data-valor="1"><i class="icone i-carinha-1"></i><span class="leitor" data-texto="pesquisa.carinha1"></span></button>
+        <button class="opcao" data-valor="2"><i class="icone i-carinha-2"></i><span class="leitor" data-texto="pesquisa.carinha2"></span></button>
+        <button class="opcao" data-valor="3"><i class="icone i-carinha-3"></i><span class="leitor" data-texto="pesquisa.carinha3"></span></button>
+        <button class="opcao" data-valor="4"><i class="icone i-carinha-4"></i><span class="leitor" data-texto="pesquisa.carinha4"></span></button>
+        <button class="opcao" data-valor="5"><i class="icone i-carinha-5"></i><span class="leitor" data-texto="pesquisa.carinha5"></span></button>
+      </div>
+    </div>
+
+    <div class="pergunta" style="top: 375px">
+      <h2 class="pergunta-longa" data-html="pesquisa.p2"></h2>
+      <div class="cartao" data-pergunta="dominio">
+        <button class="opcao estrela" data-valor="1"><i class="icone i-estrela"></i><span class="rotulo">1</span></button>
+        <button class="opcao estrela" data-valor="2"><i class="icone i-estrela"></i><span class="rotulo">2</span></button>
+        <button class="opcao estrela" data-valor="3"><i class="icone i-estrela"></i><span class="rotulo">3</span></button>
+        <button class="opcao estrela" data-valor="4"><i class="icone i-estrela"></i><span class="rotulo">4</span></button>
+        <button class="opcao estrela" data-valor="5"><i class="icone i-estrela"></i><span class="rotulo">5</span></button>
+      </div>
+    </div>
+
+    <div class="pergunta" style="top: 582px">
+      <h2 data-texto="pesquisa.p3"></h2>
+      <div class="cartao cartao-alto" data-pergunta="necessidade">
+        <button class="opcao rotulada" data-valor="nao"><i class="icone i-nao"></i><span class="rotulo" data-texto="pesquisa.nao"></span></button>
+        <button class="opcao rotulada" data-valor="aguardando"><i class="icone i-aguardando"></i><span class="rotulo" data-texto="pesquisa.aguardando"></span></button>
+        <button class="opcao rotulada" data-valor="sim"><i class="icone i-sim"></i><span class="rotulo" data-texto="pesquisa.sim"></span></button>
+      </div>
+    </div>
+
+    <div class="acoes">
+      <button id="btn-recusar" class="botao botao-secundario" data-texto="pesquisa.recusar"></button>
+      <button id="btn-enviar" class="botao botao-primario" data-texto="pesquisa.enviar" hidden></button>
+    </div>
+
+    <img class="logo-rodape" src="visao/assets/logo-asa.png" alt="" draggable="false">
+  </section>
+
+  <!-- 3. AGRADECIMENTO -->
+  <section id="tela-agradecimento" class="tela" hidden>
+    <p id="texto-agradecimento" class="texto-agradecimento"></p>
+    <img class="logo-rodape logo-negativo" src="visao/assets/logo-asa-negativo.png" alt="" draggable="false">
+  </section>
+
+  <!-- MANUTENCAO -->
+  <section id="manutencao" class="tela manutencao" hidden>
+    <header class="topo">
+      <h1 data-texto="manutencao.titulo"></h1>
+      <button id="btn-fechar-manutencao" class="botao-topo" data-texto="manutencao.fechar"></button>
+    </header>
+
+    <div id="etapa-pin" class="etapa-pin">
+      <h2 id="pin-titulo"></h2>
+      <p id="pin-apoio" class="apoio"></p>
+      <div id="visor-pin" class="visor-pin"></div>
+      <p id="pin-erro" class="erro"></p>
+      <div id="teclado-pin" class="teclado"></div>
+    </div>
+
+    <div id="etapa-painel" class="etapa-painel" hidden>
+      <div class="bloco">
+        <h3 data-texto="manutencao.mesa"></h3>
+        <div id="grupos" class="grupos"></div>
+      </div>
+      <div class="bloco">
+        <h3 data-texto="manutencao.conta"></h3>
+        <p id="conta-atual" class="conta"></p>
+        <div class="linha-botoes">
+          <button id="btn-entrar" class="botao botao-primario pequeno" data-texto="manutencao.entrar"></button>
+          <button id="btn-sair-conta" class="botao botao-secundario pequeno" data-texto="manutencao.sairDaConta"></button>
+        </div>
+      </div>
+      <div class="bloco">
+        <div class="linha-botoes">
+          <button id="btn-trocar-pin" class="botao botao-secundario pequeno" data-texto="manutencao.trocarPin"></button>
+          <button id="btn-sair-quiosque" class="botao botao-secundario pequeno" data-texto="manutencao.sairDoQuiosque"></button>
+        </div>
+        <p class="apoio" data-texto="manutencao.sairDoQuiosqueApoio"></p>
+        <p id="manutencao-retorno" class="retorno"></p>
+      </div>
+      <div class="bloco bloco-diagnostico">
+        <h3 data-texto="manutencao.diagnostico"></h3>
+        <pre id="diagnostico"></pre>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script type="module" src="principal.js"></script>
+</body>
+</html>

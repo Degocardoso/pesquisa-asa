@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Para onde o token pode ir. A interface manda so o caminho relativo
+        (ex.: ret_relacionamentos?$filter=...) e a casca monta a URL aqui:
+        assim o token do tablet nunca sai para outro endereco.
+    -->
+    <string name="ambiente_dataverse" translatable="false">https://fecap.crm2.dynamics.com</string>
+    <string name="versao_da_api" translatable="false">v9.2</string>
+</resources>

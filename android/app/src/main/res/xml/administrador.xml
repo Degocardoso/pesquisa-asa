@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Nenhuma politica de administrador de dispositivo e necessaria: o que o app
+     usa (quiosque, tela inicial, barra de status) vem de ser dono do
+     dispositivo, nao destas politicas. -->
+<device-admin>
+    <uses-policies />
+</device-admin>
