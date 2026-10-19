@@ -27,8 +27,36 @@ Se o sync ou o build falhar, copie a mensagem de erro inteira (aba *Build*,
 embaixo) e mande. A casca nunca foi compilada antes; erro aqui é esperado e
 costuma ser pequeno.
 
-Se a rede da FECAP tiver proxy: *Settings → Appearance & Behavior → System
-Settings → HTTP Proxy*.
+### Na rede da FECAP
+
+O proxy da FECAP inspeciona as conexões com um certificado próprio. O Windows
+confia nele (a TI o instala), mas o Java do Android Studio não, e o build para
+com **"unable to find valid certification path to requested target"**. É o
+mesmo caso do `usar_certificados_do_windows` do totem.
+
+Para o Gradle usar os certificados do Windows, crie (ou edite) o arquivo
+`gradle.properties` **do seu usuário**, não o do projeto:
+
+```powershell
+notepad $env:USERPROFILE\.gradle\gradle.properties
+```
+
+com estas duas linhas:
+
+```
+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8 -Djavax.net.ssl.trustStoreType=Windows-ROOT
+systemProp.javax.net.ssl.trustStoreType=Windows-ROOT
+```
+
+Feche e abra o Android Studio. Fica fora do projeto de propósito:
+`Windows-ROOT` só existe no Windows e quebraria o build em outro sistema.
+
+Atalho para um dia só, numa máquina em que o build já funcionou antes: painel
+**Gradle** (barra direita) → **Toggle Offline Mode**. As bibliotecas já baixadas
+bastam enquanto nenhuma nova for acrescentada.
+
+Se o proxy pedir usuário e senha (erro 407): *Settings → Appearance & Behavior →
+System Settings → HTTP Proxy*.
 
 ### Criar o emulador
 
