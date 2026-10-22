@@ -1,155 +1,54 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Atendimento presencial</title>
-<style>
-  :root {
-    --verde-escuro: #023327;
-    --verde-vivo: #00e387;
-    --fundo: #f5f5f5;
-    --papel: #ffffff;
-    --tinta: #12201c;
-    --tinta-fraca: #55665f;
-    --linha: #d9e2de;
-    --suave: #f1f5f3;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --fundo: #0f1714; --papel: #16211d; --tinta: #e6eeea; --tinta-fraca: #9fb3ab;
-      --linha: #2b3a35; --suave: #1d2a25;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--fundo); color: var(--tinta);
-    font: 16px/1.6 "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
-  header {
-    background: var(--verde-escuro); color: #fff; padding: 40px 24px 34px;
-    border-bottom: 6px solid var(--verde-vivo);
-  }
-  .miolo { max-width: 1080px; margin: 0 auto; }
-  header h1 { margin: 0 0 6px; font-size: 30px; }
-  header p { margin: 0; color: rgba(255,255,255,.78); max-width: 760px; }
-  main { padding: 30px 24px 60px; }
+<!--
+  Pagina "presencial" do guia interno (Wiki.js), caminho privado / asa / presencial.
+  So conteudo, com estilos nas proprias tags: o Wiki.js apaga blocos de estilo e scripts.
 
-  /* O caminho de uma senha, do totem a pesquisa. */
-  .jornada {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
-    background: var(--papel); border: 1px solid var(--linha); border-radius: 14px;
-    overflow: hidden; margin-bottom: 30px;
-  }
-  .etapa { padding: 16px 20px; position: relative; }
-  .etapa + .etapa { border-left: 1px solid var(--linha); }
-  .etapa b { display: block; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--tinta-fraca); }
-  .etapa span { font-size: 15px; }
+  Para liberar um sistema "em breve" quando a documentacao dele existir:
+    1. troque o <div ... opacity:.55 ...> do cartao por
+       <a href="/privado/asa/presencial/NOME" style="(o mesmo estilo, sem opacity)">
+       e o </div> que fecha o cartao por </a>;
+    2. troque "Em breve" por "Disponível · Abrir →".
+-->
+<h1>Atendimento presencial</h1>
+<p>Documentação dos sistemas do atendimento presencial do ASA: o totem que gera a senha, a TV que chama e o tablet da mesa que pergunta como foi.</p>
 
-  h2 { font-size: 20px; margin: 0 0 14px; }
-  .cartoes { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
-  .cartao {
-    display: flex; flex-direction: column; gap: 10px;
-    background: var(--papel); border: 1px solid var(--linha); border-radius: 14px;
-    padding: 22px; color: inherit; text-decoration: none;
-    transition: border-color .15s, transform .15s, box-shadow .15s;
-  }
-  a.cartao:hover, a.cartao:focus-visible {
-    border-color: var(--verde-vivo); transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(2, 51, 39, .12); outline: none;
-  }
-  .cartao h3 { margin: 0; font-size: 19px; }
-  .cartao p { margin: 0; color: var(--tinta-fraca); font-size: 15px; }
-  .cartao ul { margin: 0; padding-left: 18px; font-size: 14.5px; }
-  .cartao .rodape { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 6px; }
-  .selo {
-    font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
-    padding: 3px 10px; border-radius: 12px; background: var(--suave); color: var(--tinta-fraca);
-    border: 1px solid var(--linha);
-  }
-  .selo.pronto { background: #dff8ec; color: #0b6b43; border-color: #a8e8c8; }
-  @media (prefers-color-scheme: dark) { .selo.pronto { background: #12392a; color: #7ff0bd; border-color: #1f5a41; } }
-  .seguir { font-weight: 600; color: #0b7a4b; }
-  @media (prefers-color-scheme: dark) { .seguir { color: var(--verde-vivo); } }
-
-  /* Documentacao ainda nao publicada: aparece, mas nao leva a lugar nenhum. */
-  .cartao.em-breve { opacity: .62; }
-  .cartao.em-breve .seguir { display: none; }
-
-  footer { color: var(--tinta-fraca); font-size: 13px; text-align: center; padding: 0 24px 40px; }
-
-  @media (max-width: 700px) {
-    .jornada { grid-template-columns: 1fr; }
-    .etapa + .etapa { border-left: 0; border-top: 1px solid var(--linha); }
-    header h1 { font-size: 26px; }
-  }
-</style>
-</head>
-<body>
-
-<header>
-  <div class="miolo">
-    <h1>Atendimento presencial</h1>
-    <p>Documentação dos sistemas do atendimento presencial do ASA: o totem que gera a senha, a TV que chama e o tablet da mesa que pergunta como foi.</p>
+<div style="display:flex;flex-wrap:wrap;gap:12px;margin:18px 0 26px">
+  <div style="box-sizing:border-box;flex:1 1 200px;border:1px solid #d9e2de;border-radius:10px;padding:12px 16px">
+    <span style="display:block;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2e9e44">1 · Totem</span>
+    <span>O aluno tira a senha.</span>
   </div>
-</header>
-
-<main>
-<div class="miolo">
-
-  <div class="jornada" aria-label="O caminho de uma senha">
-    <div class="etapa"><b>1 · Totem</b><span>O aluno tira a senha.</span></div>
-    <div class="etapa"><b>2 · TV</b><span>A senha é chamada para uma mesa.</span></div>
-    <div class="etapa"><b>3 · Tablet da mesa</b><span>O aluno responde a pesquisa.</span></div>
+  <div style="box-sizing:border-box;flex:1 1 200px;border:1px solid #d9e2de;border-radius:10px;padding:12px 16px">
+    <span style="display:block;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2e9e44">2 · TV</span>
+    <span>A senha é chamada para uma mesa.</span>
   </div>
-
-  <h2>Escolha o sistema</h2>
-
-  <!--
-    Para acrescentar um sistema: copie um cartao, troque o link e os textos.
-    Enquanto a documentacao nao existir, use <div class="cartao em-breve"> e o
-    selo "Em breve". Quando publicar, troque por <a class="cartao" href="...">
-    e o selo por "Disponivel".
-  -->
-  <div class="cartoes">
-
-    <a class="cartao" href="pesquisa/index.html">
-      <h3>Pesquisa de satisfação (tablets)</h3>
-      <p>App Android nos tablets das mesas que pergunta ao aluno como foi o atendimento e grava no CRM.</p>
-      <ul>
-        <li>Como funciona e regras de encerramento</li>
-        <li>Manutenção, quiosque e segredo de acesso</li>
-        <li>Comandos, atualização e solução de problemas</li>
-        <li>Mapa do código</li>
-      </ul>
-      <div class="rodape"><span class="selo pronto">Disponível</span><span class="seguir">Abrir →</span></div>
-    </a>
-
-    <div class="cartao em-breve" aria-disabled="true">
-      <h3>Totem de senhas</h3>
-      <p>Computador com tela de toque onde o aluno se identifica e retira a senha do atendimento.</p>
-      <ul>
-        <li>Caminhos de retirada e busca por CPF</li>
-        <li>Horários, feriados e manutenção</li>
-      </ul>
-      <div class="rodape"><span class="selo">Em breve</span><span class="seguir">Abrir →</span></div>
-    </div>
-
-    <div class="cartao em-breve" aria-disabled="true">
-      <h3>TV do totem (painel de chamada)</h3>
-      <p>Tela que mostra a fila e chama as senhas para as mesas.</p>
-      <ul>
-        <li>Chamada e fila</li>
-        <li>Configuração e manutenção</li>
-      </ul>
-      <div class="rodape"><span class="selo">Em breve</span><span class="seguir">Abrir →</span></div>
-    </div>
-
+  <div style="box-sizing:border-box;flex:1 1 200px;border:1px solid #d9e2de;border-radius:10px;padding:12px 16px">
+    <span style="display:block;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2e9e44">3 · Tablet da mesa</span>
+    <span>O aluno responde a pesquisa.</span>
   </div>
 </div>
-</main>
 
-<footer>ASA · FECAP · fonte: <code>docs/guia/presencial/index.html</code> no repositório <code>pesquisa-asa</code></footer>
+<h2>Escolha o sistema</h2>
 
-</body>
-</html>
+<div style="display:flex;flex-wrap:wrap;gap:16px;margin:14px 0 10px">
+
+  <a href="/privado/asa/presencial/pesquisa" style="box-sizing:border-box;flex:1 1 280px;display:block;border:1px solid #d9e2de;border-left:6px solid #00e387;border-radius:10px;padding:18px 20px;text-decoration:none;color:inherit">
+    <span style="display:block;font-size:18px;font-weight:700">Pesquisa de satisfação (tablets)</span>
+    <span style="display:block;margin:6px 0 10px;opacity:.8">App Android nos tablets das mesas que pergunta ao aluno como foi o atendimento e grava no CRM.</span>
+    <span style="display:block;font-size:14px;opacity:.8">Como funciona · regras de encerramento · manutenção · quiosque · segredo de acesso · comandos · atualização · solução de problemas · mapa do código</span>
+    <span style="display:inline-block;margin-top:14px;padding:3px 12px;border-radius:12px;background:#dff8ec;color:#0b6b43;font-size:13px;font-weight:700">Disponível · Abrir →</span>
+  </a>
+
+  <div style="box-sizing:border-box;flex:1 1 280px;display:block;border:1px solid #d9e2de;border-left:6px solid #b8c4bf;border-radius:10px;padding:18px 20px;opacity:.55">
+    <span style="display:block;font-size:18px;font-weight:700">Totem de senhas</span>
+    <span style="display:block;margin:6px 0 10px;opacity:.8">Computador com tela de toque onde o aluno se identifica e retira a senha do atendimento.</span>
+    <span style="display:block;font-size:14px;opacity:.8">Caminhos de retirada · busca por CPF · horários e feriados · manutenção</span>
+    <span style="display:inline-block;margin-top:14px;padding:3px 12px;border-radius:12px;background:#eceff1;color:#55665f;font-size:13px;font-weight:700">Em breve</span>
+  </div>
+
+  <div style="box-sizing:border-box;flex:1 1 280px;display:block;border:1px solid #d9e2de;border-left:6px solid #b8c4bf;border-radius:10px;padding:18px 20px;opacity:.55">
+    <span style="display:block;font-size:18px;font-weight:700">TV do totem (painel de chamada)</span>
+    <span style="display:block;margin:6px 0 10px;opacity:.8">Tela que mostra a fila e chama as senhas para as mesas.</span>
+    <span style="display:block;font-size:14px;opacity:.8">Chamada e fila · configuração · manutenção</span>
+    <span style="display:inline-block;margin-top:14px;padding:3px 12px;border-radius:12px;background:#eceff1;color:#55665f;font-size:13px;font-weight:700">Em breve</span>
+  </div>
+
+</div>
