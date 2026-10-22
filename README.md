@@ -121,4 +121,5 @@ com a conta do tablet (MSAL) continua disponível como alternativa
 
 Antes de mexer, leia `CONTINUIDADE.md`. O manual completo, com tudo o que o
 tablet faz, os comandos de manutenção e o mapa do código, está em
-`docs/MANUAL.html` (abre direto no navegador).
+`docs/guia/presencial/pesquisa/index.html` (abre direto no navegador). A pasta
+`docs/guia/presencial/` é a mesma do guia interno (privado / asa / presencial).

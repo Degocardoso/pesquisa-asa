@@ -38,6 +38,8 @@
     border-bottom: 6px solid var(--verde-vivo);
   }
   header.capa .miolo { max-width: 1180px; margin: 0 auto; }
+  header.capa a.voltar { display: inline-block; margin-bottom: 14px; color: var(--verde-vivo); text-decoration: none; font-size: 14px; font-weight: 600; }
+  header.capa a.voltar:hover { text-decoration: underline; }
   header.capa h1 { margin: 0 0 6px; font-size: 30px; letter-spacing: .2px; }
   header.capa p { margin: 0; color: rgba(255,255,255,.78); max-width: 820px; }
   header.capa code { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.25); color: #fff; }
@@ -89,6 +91,7 @@
 
 <header class="capa">
   <div class="miolo">
+    <a class="voltar" href="../index.html">← Atendimento presencial</a>
     <h1>Pesquisa de satisfação nos tablets — manual completo</h1>
     <p>Tudo o que o app faz, como operar, os comandos de manutenção e onde mexer no código. ASA / FECAP · repositório <code>pesquisa-asa</code> · atualizado em outubro de 2026.</p>
   </div>
@@ -729,7 +732,7 @@ hashDaAssinatura=...</code></pre>
 </main>
 </div>
 
-<footer>Pesquisa ASA · ASA / FECAP · este manual fica em <code>docs/MANUAL.html</code> no repositório <code>pesquisa-asa</code></footer>
+<footer>Pesquisa ASA · ASA / FECAP · fonte: <code>docs/guia/presencial/pesquisa/index.html</code> no repositório <code>pesquisa-asa</code></footer>
 
 <script>
   // Botao "copiar" em cada bloco de codigo. Sem dependencias: o manual tem que
