@@ -85,8 +85,14 @@ export class Visao {
     $$("#tela-pesquisa .cartao").forEach((cartao) => {
       const valor = respostas[cartao.dataset.pergunta];
       if (valor !== null) algum = true;
+      // A cor vem do CSS, pela nota escolhida.
+      cartao.classList.toggle("tem-escolha", valor !== null);
+      if (valor !== null) cartao.dataset.escolha = String(valor);
+      else delete cartao.dataset.escolha;
       $$(".opcao", cartao).forEach((botao) => {
         botao.classList.toggle("is-marcada", valor !== null && String(valor) === botao.dataset.valor);
+        botao.classList.toggle("is-preenchida", botao.classList.contains("estrela")
+          && valor !== null && Number(botao.dataset.valor) <= Number(valor));
       });
     });
     // Como no layout: o botao de enviar so aparece depois da primeira marcacao.

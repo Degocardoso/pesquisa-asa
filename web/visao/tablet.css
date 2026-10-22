@@ -19,6 +19,15 @@
   --linha:        #9eb9b0;
   --vermelho:     #b3261e;
 
+  /* Escala de satisfacao, do pior ao melhor: vermelho, laranja, amarelo,
+     verde-claro, verde. A mesma ideia do app antigo, que ja pintava cada
+     carinha de uma cor. */
+  --nota-1: #e53935;
+  --nota-2: #fb8c00;
+  --nota-3: #f9b800;
+  --nota-4: #7cb342;
+  --nota-5: #2e9e44;
+
   /* Se as fontes da marca forem instaladas em visao/assets/fontes, troque aqui. */
   --sans: "Poppins", "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
 }
@@ -227,8 +236,34 @@ button {
   color: var(--vermelho);
 }
 
-.opcao.is-marcada .icone   { background-color: var(--verde-vivo); transform: scale(1.06); }
-.opcao.is-marcada .rotulo  { color: var(--verde-vivo); }
+/* Cada opcao tem a cor da nota que representa. Na pergunta 3, "Nao" e o
+   pior caso, "Aguardando" fica no meio e "Sim" e o melhor. */
+.opcao[data-valor="1"], .opcao[data-valor="nao"]        { --cor: var(--nota-1); }
+.opcao[data-valor="2"]                                  { --cor: var(--nota-2); }
+.opcao[data-valor="3"], .opcao[data-valor="aguardando"] { --cor: var(--nota-3); }
+.opcao[data-valor="4"]                                  { --cor: var(--nota-4); }
+.opcao[data-valor="5"], .opcao[data-valor="sim"]        { --cor: var(--nota-5); }
+
+.opcao.is-marcada .icone  { background-color: var(--cor); transform: scale(1.12); }
+/* Texto um pouco mais escuro que o icone: amarelo puro sobre branco nao se le. */
+.opcao.is-marcada .rotulo { color: color-mix(in srgb, var(--cor) 70%, black); font-weight: 600; }
+
+/* Com uma escolha feita, as outras carinhas e respostas recuam. As estrelas
+   nao: nelas a escala inteira ate a escolhida e a resposta. */
+.cartao.tem-escolha:not([data-pergunta="dominio"]) .opcao:not(.is-marcada) { opacity: .4; }
+
+/* Estrelas acumulam: escolher 3 preenche 1, 2 e 3, todas na cor da nota 3. */
+.cartao[data-escolha="1"] { --cor-estrela: var(--nota-1); }
+.cartao[data-escolha="2"] { --cor-estrela: var(--nota-2); }
+.cartao[data-escolha="3"] { --cor-estrela: var(--nota-3); }
+.cartao[data-escolha="4"] { --cor-estrela: var(--nota-4); }
+.cartao[data-escolha="5"] { --cor-estrela: var(--nota-5); }
+.estrela.is-preenchida .icone {
+  background-color: var(--cor-estrela);
+  -webkit-mask-image: url(assets/icones/estrela-cheia.png);
+  mask-image: url(assets/icones/estrela-cheia.png);
+}
+.estrela.is-preenchida .rotulo { color: color-mix(in srgb, var(--cor-estrela) 70%, black); font-weight: 600; }
 
 .i-carinha-1 { -webkit-mask-image: url(assets/icones/carinha-1.png); mask-image: url(assets/icones/carinha-1.png); }
 .i-carinha-2 { -webkit-mask-image: url(assets/icones/carinha-2.png); mask-image: url(assets/icones/carinha-2.png); }

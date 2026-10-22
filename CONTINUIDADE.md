@@ -20,10 +20,13 @@ Android 15), com acesso por segredo: a consulta trouxe a pesquisa pendente da
 Mesa 1, a tela apareceu e a resposta foi gravada e conferida no CRM pela Web
 API. A casca Android compilou sem ajustes.
 
+**Primeiro tablet de verdade em quiosque completo (dono do dispositivo)** em
+outubro de 2026, sem formatar: bastou remover as contas antes do
+`dpm set-device-owner`. A configuração de Wi-Fi da FECAP foi mantida.
+
 **Ainda não testado no CRM real:** respondida parcialmente, cancelada pelo
-cliente, por tempo e por nova senha (com o alerta de 30 s), queda de Wi-Fi, e o
-quiosque como dono do dispositivo num tablet de verdade. Todos estão cobertos
-pelos testes automáticos e pelo simulador.
+cliente, por tempo e por nova senha (com o alerta de 30 s), queda de Wi-Fi, . Todos estão
+cobertos pelos testes automáticos e pelo simulador.
 
 **O modo por conta (MSAL)** chegou até o login da Microsoft, mas nunca até o
 CRM: falta o consentimento do administrador no registro dos tablets.
