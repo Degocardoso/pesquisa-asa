@@ -15,16 +15,28 @@ qualquer pessoa descobre isso. Como dono do dispositivo, o app trava o tablet de
 verdade: sem barra de status, sem Início, sem apps recentes, sem tela de
 bloqueio, e ele abre sozinho quando o tablet liga.
 
-O preço: só dá para registrar um dono num tablet **restaurado de fábrica e sem
-nenhuma conta** (nem Google). E só se desfaz restaurando de fábrica de novo.
+O preço: só dá para registrar um dono num tablet **sem nenhuma conta** (nem
+Google, nem Samsung, nem Microsoft). E só se desfaz restaurando de fábrica.
+
+**Normalmente não precisa formatar.** Removendo todas as contas em
+*Configurações → Contas*, o comando do passo 2 costuma funcionar no tablet como
+está, e a configuração de Wi-Fi da FECAP continua. Foi assim no primeiro tablet,
+em outubro de 2026. Formatar só se o comando recusar mesmo sem contas, e aí a
+configuração de Wi-Fi se perde: anote antes como ela é (tipo de segurança,
+usuário, certificado).
+
+Antes de tudo, confira se o tablet já não é gerenciado por outro sistema da TI
+(*Configurações → Segurança → Apps de administração do dispositivo*, ou aviso de
+"dispositivo gerenciado"). Se for, o app não pode ser dono: fale com a TI.
 
 ---
 
-## Passo 1 — Restaurar e configurar o básico
+## Passo 1 — Preparar o tablet
 
-1. Restaure o tablet de fábrica.
-2. Na configuração inicial: conecte ao Wi-Fi da instituição e **pule a conta
-   Google**.
+1. Remova todas as contas (*Configurações → Contas*). Só se o passo 2 recusar
+   mesmo assim: restaure de fábrica e, na configuração inicial, conecte ao Wi-Fi
+   da instituição e **pule a conta Google**.
+2. Desative qualquer outro app em *Apps de administração do dispositivo*.
 3. Em Configurações → Data e hora: data e hora automáticas, fuso de São Paulo.
    O prazo de 30 minutos é contado pelo relógio do tablet.
 4. Em Configurações → Sobre → toque 7 vezes em "Número da versão" para liberar
@@ -39,8 +51,15 @@ adb install pesquisa-asa.apk
 adb shell dpm set-device-owner br.fecap.asa.pesquisa/.Administrador
 ```
 
-O segundo comando deve responder `Success: Device owner set`. Se reclamar de
-contas, há alguma conta no tablet (passo 1.2).
+O segundo comando deve responder `Success: Device owner set`. Atenção: ativar o
+app pela tela *Apps de administração do dispositivo* **não** é a mesma coisa e
+não liga o quiosque; tem que ser este comando.
+
+| Erro | Causa |
+|---|---|
+| `already some accounts on the device` | Ainda há conta. `adb shell dumpsys account` mostra qual. |
+| `already several users` | Há outro usuário, convidado ou perfil de trabalho: remova em *Configurações → Usuários*. |
+| `already provisioned` / `already has a device owner` | Só formatando, ou outro sistema já é dono (fale com a TI). |
 
 ## Passo 3 — Primeira abertura
 
