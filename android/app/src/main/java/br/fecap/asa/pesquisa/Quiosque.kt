@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.BatteryManager
 import android.os.UserManager
 import android.provider.Settings
@@ -32,6 +33,17 @@ object Quiosque {
 
     private fun administrador(contexto: Context) = ComponentName(contexto, Administrador::class.java)
 
+    // O alias do AndroidManifest.xml que faz do app a tela inicial.
+    private fun inicio(contexto: Context) = ComponentName(contexto.packageName, "${contexto.packageName}.Inicio")
+
+    fun ligarTelaInicial(contexto: Context, ligada: Boolean) {
+        contexto.packageManager.setComponentEnabledSetting(
+            inicio(contexto),
+            if (ligada) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP,
+        )
+    }
+
     fun eDono(contexto: Context): Boolean = politicas(contexto).isDeviceOwnerApp(contexto.packageName)
 
     /**
@@ -48,11 +60,15 @@ object Quiosque {
         dpm.setLockTaskPackages(admin, arrayOf(atividade.packageName))
         dpm.setLockTaskFeatures(admin, DevicePolicyManager.LOCK_TASK_FEATURE_NONE)
 
-        val inicio = IntentFilter(Intent.ACTION_MAIN).apply {
+        ligarTelaInicial(atividade, true)
+        // Limpa antes de cadastrar: versoes anteriores apontavam a tela
+        // inicial direto para a atividade, e o cadastro velho ficaria junto.
+        dpm.clearPackagePersistentPreferredActivities(admin, atividade.packageName)
+        val filtro = IntentFilter(Intent.ACTION_MAIN).apply {
             addCategory(Intent.CATEGORY_HOME)
             addCategory(Intent.CATEGORY_DEFAULT)
         }
-        dpm.addPersistentPreferredActivity(admin, inicio, ComponentName(atividade, AtividadePrincipal::class.java))
+        dpm.addPersistentPreferredActivity(admin, filtro, inicio(atividade))
 
         dpm.setKeyguardDisabled(admin, true)
         dpm.setStatusBarDisabled(admin, true)
@@ -81,13 +97,15 @@ object Quiosque {
 
     /**
      * Libera o tablet para atualizar o app ou trocar o segredo: a tela inicial
-     * do Android e a depuracao USB voltam a funcionar ate o app ser reaberto.
+     * do Android e a depuracao USB voltam a funcionar ate o quiosque ser
+     * reativado (botao da manutencao, prazo automatico ou reinicio).
      */
     fun sair(atividade: Activity) {
         if (eDono(atividade)) {
             val dpm = politicas(atividade)
             val admin = administrador(atividade)
             dpm.clearPackagePersistentPreferredActivities(admin, atividade.packageName)
+            ligarTelaInicial(atividade, false)
             dpm.setStatusBarDisabled(admin, false)
             dpm.clearUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
         }

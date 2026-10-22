@@ -93,8 +93,9 @@ toque — enquanto está aberta o tablet não mostra pesquisa.
 ## Atualizar o app
 
 1. Manutenção → **Sair do modo quiosque**. O Android e a depuração USB ficam
-   livres até você voltar ao app. Ligue a depuração nas opções do
-   desenvolvedor (o bloqueio a terá desligado).
+   livres por até 15 minutos. Toque em **Abrir configurações do Android** e
+   ligue a depuração nas opções do desenvolvedor (o bloqueio a terá
+   desligado). O botão Início também leva à tela normal do Android.
 2. Gere o APK (*Build → Build App Bundle(s) / APK(s) → Build APK(s)*, ou o
    release assinado) e instale pelo adb:
    `adb install -r android\app\build\outputs\apk\debug\app-debug.apk`.
@@ -105,8 +106,19 @@ toque — enquanto está aberta o tablet não mostra pesquisa.
    do dispositivo ("Couldn't terminate previous instance of app"). O
    `adb install -r` não precisa fechar nada. Também não desinstale: o app dono
    não pode ser desinstalado, e PIN, mesa e credencial se perderiam.
-3. Abra o app de novo: o quiosque e o bloqueio da depuração voltam sozinhos.
-   Mesa, PIN e credencial continuam lá: atualizar o app não apaga os dados dele.
+3. Abra o app de novo: depois de uma atualização o quiosque e o bloqueio da
+   depuração voltam sozinhos. Mesa, PIN e credencial continuam lá: atualizar o
+   app não apaga os dados dele.
+
+## Suspender o quiosque sem atualizar
+
+Para mexer nas configurações do Android (Wi-Fi, data e hora): manutenção →
+**Sair do modo quiosque** → **Abrir configurações do Android**. Para voltar,
+abra o app e toque em **Voltar ao modo quiosque** na manutenção.
+
+Se ninguém voltar, o quiosque volta sozinho **15 minutos** depois da suspensão,
+ou quando o tablet reiniciar. Assim um tablet esquecido aberto não fica assim o
+dia todo.
 
 ## Trocar a conta ou a mesa
 

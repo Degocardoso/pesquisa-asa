@@ -3,6 +3,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="false"
@@ -11,11 +12,6 @@
         android:theme="@style/Tema"
         android:usesCleartextTraffic="false">
 
-        <!--
-            HOME: com o app como dono do dispositivo, ele vira a tela inicial
-            e e o que abre quando o tablet liga. Fora do modo dono, o Android
-            pergunta qual tela inicial usar ao tocar em Inicio.
-        -->
         <activity
             android:name=".AtividadePrincipal"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode|density"
@@ -27,12 +23,34 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <!--
+            O app como tela inicial do Android, separado num alias para poder
+            ser desligado. Com o quiosque suspenso pela manutencao, o alias fica
+            desligado e o botao Inicio leva a tela inicial normal; ligado, o
+            Inicio volta para o app. Sem essa separacao, sair do quiosque e
+            tocar em Inicio reabria o app, que travava de novo.
+        -->
+        <activity-alias
+            android:name=".Inicio"
+            android:exported="true"
+            android:targetActivity=".AtividadePrincipal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
+        </activity-alias>
+
+        <!-- Religa o quiosque se o tablet reiniciar no meio de uma suspensao. -->
+        <receiver
+            android:name=".AoLigar"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <!--
             Retorno do login do MSAL. O caminho e o hash da assinatura SEM

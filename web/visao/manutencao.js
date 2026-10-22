@@ -53,6 +53,12 @@ export class Manutencao {
     $("#btn-sair-quiosque").addEventListener("click", () => this._acao(async () => {
       await this._s.plataforma.sairDoQuiosque(this._pin);
     }));
+    $("#btn-voltar-quiosque").addEventListener("click", () => this._acao(async () => {
+      await this._s.plataforma.voltarAoQuiosque(this._pin);
+    }));
+    $("#btn-configuracoes").addEventListener("click", () => this._acao(async () => {
+      await this._s.plataforma.abrirConfiguracoes(this._pin);
+    }));
     // Manutencao esquecida aberta para a pesquisa do tablet.
     $("#manutencao").addEventListener("pointerdown", () => this._reiniciarInatividade());
   }
@@ -183,7 +189,12 @@ export class Manutencao {
     const porSegredo = this._instalacao.acesso === "segredo";
     $("#btn-entrar").hidden = porSegredo || Boolean(this._instalacao.conta);
     $("#btn-sair-conta").hidden = porSegredo || !this._instalacao.conta;
-    $("#btn-sair-quiosque").hidden = !this._instalacao.quiosque || this._instalacao.quiosque.startsWith("inativo");
+    const suspenso = Boolean(this._instalacao.quiosqueSuspenso);
+    $("#btn-sair-quiosque").hidden = suspenso || !this._instalacao.quiosque || this._instalacao.quiosque.startsWith("inativo");
+    $("#btn-voltar-quiosque").hidden = !suspenso;
+    $("#btn-configuracoes").hidden = !suspenso;
+    $("#manutencao [data-texto='manutencao.sairDoQuiosqueApoio']").textContent =
+      this._textos.t(suspenso ? "manutencao.suspensoApoio" : "manutencao.sairDoQuiosqueApoio");
     this._desenharDiagnostico();
   }
 
