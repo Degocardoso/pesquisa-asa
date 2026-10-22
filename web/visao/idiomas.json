@@ -24,7 +24,7 @@
     },
     "agradecimento": {
       "respostas": "Agradecemos por suas respostas!",
-      "recusa": "Obrigado pela visita!"
+      "recusa": "Até a próxima, Alvarista!"
     },
     "aviso": {
       "semRedeTitulo": "Sem conexão",
@@ -86,7 +86,7 @@
     },
     "agradecimento": {
       "respostas": "Thank you for your answers!",
-      "recusa": "Thank you for your visit!"
+      "recusa": "See you next time, Alvarista!"
     }
   }
 }
