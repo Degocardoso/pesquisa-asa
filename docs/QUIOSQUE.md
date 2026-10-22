@@ -95,8 +95,16 @@ toque — enquanto está aberta o tablet não mostra pesquisa.
 1. Manutenção → **Sair do modo quiosque**. O Android e a depuração USB ficam
    livres até você voltar ao app. Ligue a depuração nas opções do
    desenvolvedor (o bloqueio a terá desligado).
-2. Rode `adb install -r pesquisa-asa.apk`. Tem que ser assinado com a mesma
-   chave (`docs/ENTRA.md`, passo 1).
+2. Gere o APK (*Build → Build App Bundle(s) / APK(s) → Build APK(s)*, ou o
+   release assinado) e instale pelo adb:
+   `adb install -r android\app\build\outputs\apk\debug\app-debug.apk`.
+   Tem que ser assinado com a mesma chave (`docs/ENTRA.md`, passo 1).
+
+   **O ▶ Run do Android Studio não serve aqui**: ele tenta forçar o fechamento
+   do app antes de instalar, e o Android não deixa fechar à força o app dono
+   do dispositivo ("Couldn't terminate previous instance of app"). O
+   `adb install -r` não precisa fechar nada. Também não desinstale: o app dono
+   não pode ser desinstalado, e PIN, mesa e credencial se perderiam.
 3. Abra o app de novo: o quiosque e o bloqueio da depuração voltam sozinhos.
    Mesa, PIN e credencial continuam lá: atualizar o app não apaga os dados dele.
 
