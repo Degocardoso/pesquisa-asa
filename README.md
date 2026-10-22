@@ -119,4 +119,6 @@ em cada aparelho pelo adb e nunca dentro do APK (`docs/SEGREDO.md`). O login
 com a conta do tablet (MSAL) continua disponível como alternativa
 (`docs/ENTRA.md`).
 
-Antes de mexer, leia `CONTINUIDADE.md`.
+Antes de mexer, leia `CONTINUIDADE.md`. O manual completo, com tudo o que o
+tablet faz, os comandos de manutenção e o mapa do código, está em
+`docs/MANUAL.html` (abre direto no navegador).

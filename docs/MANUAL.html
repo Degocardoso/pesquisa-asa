@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual da Pesquisa ASA</title>
+<style>
+  :root {
+    --verde-escuro: #023327;
+    --verde-vivo: #00e387;
+    --fundo: #f5f5f5;
+    --papel: #ffffff;
+    --tinta: #12201c;
+    --tinta-fraca: #55665f;
+    --linha: #d9e2de;
+    --codigo: #f1f5f3;
+    --alerta: #fff4cc;
+    --alerta-borda: #e7c24a;
+    --perigo: #fdecea;
+    --perigo-borda: #e0a39b;
+    --nota-1: #e53935; --nota-2: #fb8c00; --nota-3: #f9b800; --nota-4: #7cb342; --nota-5: #2e9e44;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fundo: #0f1714; --papel: #16211d; --tinta: #e6eeea; --tinta-fraca: #9fb3ab;
+      --linha: #2b3a35; --codigo: #1d2a25; --alerta: #3a3215; --alerta-borda: #8a7424;
+      --perigo: #3a1f1c; --perigo-borda: #8a4a42;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--fundo); color: var(--tinta);
+    font: 16px/1.6 "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  header.capa {
+    background: var(--verde-escuro); color: #fff; padding: 36px 24px 30px;
+    border-bottom: 6px solid var(--verde-vivo);
+  }
+  header.capa .miolo { max-width: 1180px; margin: 0 auto; }
+  header.capa h1 { margin: 0 0 6px; font-size: 30px; letter-spacing: .2px; }
+  header.capa p { margin: 0; color: rgba(255,255,255,.78); max-width: 820px; }
+  header.capa code { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.25); color: #fff; }
+  .pagina { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 250px 1fr; gap: 32px; padding: 28px 24px 80px; }
+  nav.indice { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow: auto; font-size: 14px; }
+  nav.indice b { display: block; margin-bottom: 8px; color: var(--tinta-fraca); text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+  nav.indice ol { margin: 0; padding-left: 30px; }
+  nav.indice li { margin: 3px 0; }
+  nav.indice a { color: var(--tinta); text-decoration: none; }
+  nav.indice a:hover { color: var(--nota-5); text-decoration: underline; }
+  main { min-width: 0; }
+  section { background: var(--papel); border: 1px solid var(--linha); border-radius: 14px; padding: 8px 28px 22px; margin-bottom: 22px; }
+  h2 { font-size: 23px; margin: 22px 0 10px; color: var(--tinta); border-bottom: 3px solid var(--verde-vivo); display: inline-block; padding-bottom: 2px; }
+  h3 { font-size: 18px; margin: 22px 0 6px; }
+  h4 { font-size: 16px; margin: 16px 0 4px; }
+  p, li { max-width: 860px; }
+  a { color: #0b7a4b; }
+  @media (prefers-color-scheme: dark) { a { color: var(--verde-vivo); } }
+  code { background: var(--codigo); border: 1px solid var(--linha); border-radius: 5px; padding: 1px 5px; font: 13.5px/1.4 ui-monospace, Consolas, "Roboto Mono", monospace; word-break: break-word; }
+  pre { position: relative; background: var(--codigo); border: 1px solid var(--linha); border-radius: 10px; padding: 14px 16px; overflow-x: auto; }
+  pre code { background: none; border: 0; padding: 0; white-space: pre; word-break: normal; }
+  button.copiar { position: absolute; top: 8px; right: 8px; font: 12px sans-serif; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--linha); background: var(--papel); color: var(--tinta); cursor: pointer; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0 14px; font-size: 14.5px; }
+  th, td { text-align: left; vertical-align: top; border-bottom: 1px solid var(--linha); padding: 7px 10px; }
+  th { background: var(--codigo); font-weight: 600; }
+  .tabela { overflow-x: auto; }
+  .caixa { border-radius: 10px; padding: 12px 16px; margin: 14px 0; border: 1px solid var(--linha); background: var(--codigo); }
+  .caixa.atencao { background: var(--alerta); border-color: var(--alerta-borda); }
+  .caixa.perigo { background: var(--perigo); border-color: var(--perigo-borda); }
+  .caixa > :first-child { margin-top: 0; } .caixa > :last-child { margin-bottom: 0; }
+  .fluxo { font: 13.5px/1.45 ui-monospace, Consolas, monospace; white-space: pre; overflow-x: auto; background: var(--codigo); border: 1px solid var(--linha); border-radius: 10px; padding: 14px 16px; }
+  .cores span { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; }
+  .rotulo { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 10px; background: var(--codigo); border: 1px solid var(--linha); color: var(--tinta-fraca); }
+  footer { color: var(--tinta-fraca); font-size: 13px; text-align: center; padding: 10px 0 40px; }
+  @media (max-width: 900px) {
+    .pagina { grid-template-columns: 1fr; padding: 16px; }
+    nav.indice { position: static; max-height: none; background: var(--papel); border: 1px solid var(--linha); border-radius: 14px; padding: 14px 18px; }
+    section { padding: 6px 16px 18px; }
+  }
+  @media print {
+    nav.indice, button.copiar { display: none; }
+    .pagina { display: block; }
+    section { break-inside: avoid-page; border: 0; }
+    body { background: #fff; color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<header class="capa">
+  <div class="miolo">
+    <h1>Pesquisa de satisfação nos tablets — manual completo</h1>
+    <p>Tudo o que o app faz, como operar, os comandos de manutenção e onde mexer no código. ASA / FECAP · repositório <code>pesquisa-asa</code> · atualizado em outubro de 2026.</p>
+  </div>
+</header>
+
+<div class="pagina">
+
+<nav class="indice" aria-label="Índice">
+  <b>Índice</b>
+  <ol>
+    <li><a href="#visao-geral">Visão geral</a></li>
+    <li><a href="#fluxo">O que o tablet faz</a></li>
+    <li><a href="#regras">Regras de encerramento</a></li>
+    <li><a href="#telas">Telas e avisos</a></li>
+    <li><a href="#manutencao">Tela de manutenção</a></li>
+    <li><a href="#crm">CRM: campos e consulta</a></li>
+    <li><a href="#acesso">Acesso ao CRM (segredo)</a></li>
+    <li><a href="#quiosque">Modo quiosque</a></li>
+    <li><a href="#comandos">Comandos (PowerShell)</a></li>
+    <li><a href="#novo-tablet">Preparar um tablet novo</a></li>
+    <li><a href="#atualizar">Atualizar o app</a></li>
+    <li><a href="#problemas">Solução de problemas</a></li>
+    <li><a href="#onde-mexer">Onde mexer no código</a></li>
+    <li><a href="#arquivos">Mapa dos arquivos</a></li>
+    <li><a href="#arquitetura">Arquitetura e ponte</a></li>
+    <li><a href="#desenvolver">Desenvolver e testar</a></li>
+    <li><a href="#cofre">O que guardar no cofre</a></li>
+    <li><a href="#decisoes">Decisões e pendências</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<section id="visao-geral">
+  <h2>1. Visão geral</h2>
+  <p>O app substitui os três apps de canvas do Power Apps (CSAT Mesa 01, 02 e 03/04) e os fluxos do Power Automate que os alimentavam. É um <b>APK Android único</b>, instalado nos três tablets das mesas de atendimento presencial, que fala <b>direto com o Dataverse</b> (o CRM).</p>
+  <p>É a terceira peça do atendimento presencial: o <b>totem</b> gera a senha, o <b>painel</b> chama, e o <b>tablet da mesa</b> pergunta como foi.</p>
+
+  <div class="tabela"><table>
+    <tr><th>Tablet</th><th>Grupo na manutenção</th><th>Mesas atendidas</th></tr>
+    <tr><td>Tablet 1</td><td>Mesa 1</td><td>Mesa 1</td></tr>
+    <tr><td>Tablet 2</td><td>Mesa 2</td><td>Mesa 2</td></tr>
+    <tr><td>Tablet 3</td><td>Mesas 3 e 4</td><td>Mesa 3 e Mesa 4, numa fila só</td></tr>
+  </table></div>
+
+  <h3>Como o app é feito, em uma frase por parte</h3>
+  <ul>
+    <li><b>A aplicação</b> (pasta <code>web/</code>) é HTML, CSS e JavaScript, organizada em MVC. Contém todas as regras e todas as telas. Roda dentro do app e também no navegador do computador (simulador).</li>
+    <li><b>A casca Android</b> (pasta <code>android/</code>) é Kotlin. Mostra a aplicação num WebView e faz o que o navegador não consegue: o token de acesso, a chamada HTTP ao CRM, o modo quiosque, a tela sempre acesa, e guarda mesa, PIN e credencial.</li>
+    <li><b>O acesso ao CRM</b> é por um <b>segredo de aplicativo próprio dos tablets</b>, instalado em cada aparelho pelo cabo (adb) e guardado cifrado. O segredo nunca vai dentro do APK.</li>
+  </ul>
+
+  <div class="caixa">
+    <p><b>Documentos de apoio no repositório</b> (em Markdown, mais curtos que este manual):</p>
+    <ul>
+      <li><code>README.md</code> — resumo e "onde mexer"</li>
+      <li><code>CONTINUIDADE.md</code> — estado do projeto, decisões e dívidas</li>
+      <li><code>docs/QUIOSQUE.md</code> — preparar e operar os tablets</li>
+      <li><code>docs/SEGREDO.md</code> — segredo, usuário de aplicativo no CRM, troca</li>
+      <li><code>docs/ENTRA.md</code> — chave de assinatura do APK e o modo por conta (MSAL)</li>
+      <li><code>docs/TESTAR.md</code> — testar no Android Studio, emulador e rede da FECAP</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<section id="fluxo">
+  <h2>2. O que o tablet faz</h2>
+
+<div class="fluxo"> DESCANSO ──(chegou pesquisa)──> PESQUISA ──(Enviar / Prefiro não responder)──> AGRADECIMENTO (10 s)
+    ^                           │                                                        │
+    │                           ├── 30 min desde a chamada da senha → grava "por tempo"   │
+    │                           └── chegou outra pesquisa na mesma mesa                   │
+    │                                 ├── nada marcado: troca na hora                    │
+    │                                 └── algo marcado: alerta de 30 s, depois troca     │
+    └────────────────────────────────────────────────────────────────────────────────────┘</div>
+
+  <h3>2.1 A consulta ao CRM</h3>
+  <p>A cada <b>5 segundos</b> o tablet pergunta ao CRM pelas pesquisas pendentes <b>da sua mesa</b>. Pendente quer dizer:</p>
+  <ul>
+    <li>senha do atendimento presencial, tirada no totem (tem número de senha);</li>
+    <li>com <b>"Iniciar Pesquisa?" = Sim</b>;</li>
+    <li>da mesa (ou mesas) deste tablet;</li>
+    <li><b>ainda sem data de realização da pesquisa</b> (ninguém encerrou);</li>
+    <li>com hora de chamada preenchida;</li>
+    <li><b>criada hoje</b> (desde a meia-noite de Brasília).</li>
+  </ul>
+  <p>Vêm no máximo 5, a de chamada mais recente primeiro. Não existe contagem de registros, como no app antigo: o filtro já devolve exatamente as pendentes.</p>
+
+  <h3>2.2 O que aparece e quando</h3>
+  <ul>
+    <li><b>Uma pendente válida</b> → a pesquisa aparece na tela, em português (a pessoa pode trocar para inglês; a próxima pesquisa volta ao português).</li>
+    <li><b>Pendente que já passou de 30 minutos</b> desde a chamada → <b>não aparece</b>; é gravada direto como "Cancelada por tempo".</li>
+    <li><b>Várias pendentes ao mesmo tempo</b> (ex.: duas chamadas antes da consulta) → aparece só a mais recente; as outras são gravadas como "Cancelada por tempo", sem aparecer.</li>
+    <li><b>Durante o agradecimento</b> a próxima espera; ela aparece logo que o agradecimento termina.</li>
+  </ul>
+
+  <h3>2.3 Quando chega uma pesquisa nova com outra na tela</h3>
+  <ul>
+    <li><b>Nada marcado</b> na pesquisa da tela → troca <b>na hora</b>. A anterior é gravada como "Cancelada por nova senha".</li>
+    <li><b>Algo marcado</b> → aparece uma faixa amarela com contagem de <b>30 segundos</b>: "Uma nova pesquisa vai começar em N s. Toque em Enviar resposta para concluir a sua."
+      <ul>
+        <li>Se a pessoa enviar nesse tempo, conta normalmente; a nova aparece depois do agradecimento.</li>
+        <li>Se não, o que foi marcado é gravado como "Cancelada por nova senha" e a nova aparece.</li>
+        <li>Se uma terceira chegar durante o alerta, ela toma o lugar da segunda (que sai "por tempo", sem aparecer); o alerta não recomeça.</li>
+      </ul>
+    </li>
+  </ul>
+  <p>Isso vale para todas as mesas. No tablet 3, Mesa 3 e Mesa 4 dividem a mesma fila.</p>
+
+  <h3>2.4 Sem internet</h3>
+  <ul>
+    <li>Se a conexão cair, a tela de descanso mostra <b>"Sem conexão"</b> e o tablet tenta de novo sozinho a cada 5 segundos.</li>
+    <li>Se cair <b>no momento de gravar</b> uma resposta, a pessoa vê o agradecimento normalmente; a gravação fica numa <b>fila em memória</b> e é reenviada a cada consulta até o CRM confirmar. A pesquisa não volta para a tela.</li>
+    <li>Nada é guardado em disco para enviar depois. Se o tablet desligar antes de reenviar, a pesquisa continua pendente no CRM e o prazo de 30 minutos a encerra.</li>
+  </ul>
+</section>
+
+<!-- ===================================================================== -->
+<section id="regras">
+  <h2>3. Regras de encerramento</h2>
+  <p>Toda pesquisa termina de uma destas formas, e <b>todas gravam no CRM</b>, inclusive as canceladas (é assim que se mede a taxa de resposta). O que a pessoa marcou é sempre gravado; o motivo do fim vai só na "Situação da pesquisa".</p>
+
+  <div class="tabela"><table>
+    <tr><th>Situação gravada</th><th>Quando</th><th>Pergunta 1 e 2</th><th>Pergunta 3</th></tr>
+    <tr><td><b>Respondida</b></td><td>Tocou em Enviar com as três respondidas</td><td>as notas marcadas</td><td>a resposta marcada</td></tr>
+    <tr><td><b>Respondida parcialmente</b></td><td>Não acontece pela tela (Enviar exige as três). Continua no código para não depender da tela.</td><td>—</td><td>—</td></tr>
+    <tr><td><b>Cancelada pelo cliente</b></td><td>Tocou em "Prefiro não responder" (a qualquer momento, com ou sem marcações)</td><td>o que marcou, ou <code>0</code></td><td>o que marcou, ou "Não respondida"</td></tr>
+    <tr><td><b>Cancelada por tempo</b></td><td>Passaram 30 min desde a chamada (na tela ou antes de aparecer), ou foi superada por outra antes de aparecer</td><td>o que marcou, ou <code>0</code></td><td>o que marcou, ou "Não respondida"</td></tr>
+    <tr><td><b>Cancelada por nova senha</b></td><td>Estava na tela e chegou a seguinte (troca imediata ou depois do alerta)</td><td>o que marcou, ou <code>0</code></td><td>o que marcou, ou "Não respondida"</td></tr>
+  </table></div>
+
+  <h3>Enviar exige as três respostas</h3>
+  <p>O botão "Enviar resposta" só aparece depois da primeira marcação (como no layout). Se a pessoa tocar nele com pergunta em branco, <b>nada é gravado</b>: aparece em vermelho "Para enviar, responda também a(s) pergunta(s) N. Se preferir, toque em 'Prefiro não responder'." e as perguntas em branco ganham borda vermelha. O aviso some sozinho conforme ela responde.</p>
+
+  <h3>Detalhes que importam</h3>
+  <ul>
+    <li>O prazo de <b>30 minutos conta da chamada da senha</b> (campo "Hora de Chamada"), não de quando a pesquisa apareceu no tablet.</li>
+    <li>Nota em branco grava <b><code>0</code></b>. Os gráficos só consideram de 1 a 5, então o zero nunca entra numa média.</li>
+    <li>A data de realização é gravada em <b>UTC</b>. O CRM mostra no horário local.</li>
+    <li>Um erro definitivo do CRM (400, 404) descarta aquela gravação (repetir não adiantaria) e aparece em "Último erro" no diagnóstico.</li>
+  </ul>
+</section>
+
+<!-- ===================================================================== -->
+<section id="telas">
+  <h2>4. Telas e avisos</h2>
+
+  <h3>4.1 Telas para o público</h3>
+  <div class="tabela"><table>
+    <tr><th>Tela</th><th>O que mostra</th></tr>
+    <tr><td><b>Descanso</b></td><td>Só o logo do ASA, fundo cinza claro. Segurar o logo por 3 s abre a manutenção.</td></tr>
+    <tr><td><b>Pesquisa</b></td><td>Cabeçalho verde com "PESQUISA DE SATISFAÇÃO" e os botões PT/EN; as três perguntas; "Prefiro não responder" e "Enviar resposta".</td></tr>
+    <tr><td><b>Agradecimento</b></td><td>Fundo verde escuro, 10 segundos. Depois de enviar: "Agradecemos por suas respostas!". Depois de "Prefiro não responder": "Até a próxima, Alvarista!".</td></tr>
+  </table></div>
+
+  <h3>4.2 As três perguntas e as cores</h3>
+  <div class="tabela"><table>
+    <tr><th>#</th><th>Pergunta</th><th>Resposta</th></tr>
+    <tr><td>1</td><td>Qual seu nível de satisfação com o atendimento presencial?</td><td>5 carinhas, 1 (muito triste) a 5 (muito feliz)</td></tr>
+    <tr><td>2</td><td>Como você avalia o domínio do colaborador sobre o assunto tratado?</td><td>5 estrelas, de 1 a 5</td></tr>
+    <tr><td>3</td><td>Sua necessidade foi resolvida?</td><td>Não · Estou aguardando retorno · Sim</td></tr>
+  </table></div>
+  <p class="cores">Escala de cores, do pior ao melhor:
+    <span style="background:var(--nota-1)"></span>1 vermelho ·
+    <span style="background:var(--nota-2)"></span>2 laranja ·
+    <span style="background:var(--nota-3)"></span>3 amarelo ·
+    <span style="background:var(--nota-4)"></span>4 verde-claro ·
+    <span style="background:var(--nota-5)"></span>5 verde.</p>
+  <ul>
+    <li><b>Carinhas:</b> a escolhida ganha a cor da nota e cresce; as outras ficam apagadas.</li>
+    <li><b>Estrelas:</b> acumulam até a escolhida, preenchidas na cor da nota escolhida (tocar na 3ª preenche 1, 2 e 3 em amarelo).</li>
+    <li><b>Necessidade:</b> Não em vermelho, Aguardando em amarelo, Sim em verde; as outras ficam apagadas.</li>
+  </ul>
+
+  <h3>4.3 Avisos para a equipe (aparecem na tela de descanso)</h3>
+  <div class="tabela"><table>
+    <tr><th>Aviso</th><th>Significa</th><th>O que fazer</th></tr>
+    <tr><td><b>Sem conexão</b></td><td>O tablet não alcança o CRM.</td><td>Nada: volta sozinho com a rede. Se persistir, ver o Wi-Fi.</td></tr>
+    <tr><td><b>Tablet desconectado</b></td><td>O Entra aceitou o segredo, mas o CRM recusou o acesso (401/403).</td><td>Ver o usuário de aplicativo e a função dele no CRM (<a href="#acesso">seção 7</a>).</td></tr>
+    <tr><td><b>Instalação incompleta</b></td><td>Sem credencial, ou o Entra recusou o segredo (errado ou vencido).</td><td>Ver "Último erro" no diagnóstico e reinstalar a credencial (<a href="#acesso">seção 7</a>).</td></tr>
+    <tr><td><b>Tablet sem mesa</b></td><td>Nenhuma mesa escolhida.</td><td>Manutenção → escolher a mesa.</td></tr>
+  </table></div>
+</section>
+
+<!-- ===================================================================== -->
+<section id="manutencao">
+  <h2>5. Tela de manutenção</h2>
+  <h3>Como abrir</h3>
+  <p>Na tela de descanso, <b>segure o logo do ASA por 3 segundos</b> e digite o PIN. Ela não abre no meio de uma pesquisa (para o cliente não cair numa tela de PIN). Na primeira abertura do app ela abre sozinha, para definir PIN, mesa e credencial.</p>
+  <div class="caixa atencao">
+    <p>Enquanto a manutenção está aberta, o tablet <b>não consulta o CRM nem mostra pesquisa</b>. Por isso ela <b>fecha sozinha depois de 2 minutos sem toque</b>.</p>
+  </div>
+
+  <h3>O que tem nela</h3>
+  <div class="tabela"><table>
+    <tr><th>Item</th><th>O que faz</th></tr>
+    <tr><td><b>PIN</b></td><td>4 a 8 números. Na primeira vez é definido (digitado duas vezes). A conferência é feita pelo Android, que guarda só um hash; toda ação protegida pede o PIN de novo.</td></tr>
+    <tr><td><b>Mesa atendida</b></td><td>Mesa 1 · Mesa 2 · Mesas 3 e 4. Vale ao fechar a manutenção.</td></tr>
+    <tr><td><b>Conta do tablet</b></td><td>No modo segredo mostra "aplicativo xxxxxxxx… (segredo do tablet)" e esconde Entrar/Sair. No modo por conta, mostra a conta e os botões Entrar/Sair da conta.</td></tr>
+    <tr><td><b>Trocar PIN</b></td><td>Pede o PIN novo duas vezes.</td></tr>
+    <tr><td><b>Sair do modo quiosque</b></td><td>Libera o Android por até 15 minutos (ver <a href="#quiosque">seção 8</a>). Aparece com o quiosque ativo.</td></tr>
+    <tr><td><b>Voltar ao modo quiosque</b></td><td>Reativa o quiosque na hora. Aparece só durante a suspensão.</td></tr>
+    <tr><td><b>Abrir configurações do Android</b></td><td>Abre as Configurações (Wi-Fi, data, opções do desenvolvedor). Só durante a suspensão.</td></tr>
+    <tr><td><b>Fechar</b></td><td>Fecha e volta a consultar o CRM.</td></tr>
+  </table></div>
+
+  <h3>As linhas do diagnóstico</h3>
+  <div class="tabela"><table>
+    <tr><th>Linha</th><th>Como ler</th></tr>
+    <tr><td>Versão do app</td><td>A versão instalada (<code>versionName</code> do <code>android/app/build.gradle.kts</code>).</td></tr>
+    <tr><td>Modo quiosque</td><td>"ativo (dono do dispositivo)" é o normal. "inativo (suspenso pela manutenção)" durante a suspensão. "fixação de tela" se o app não for dono.</td></tr>
+    <tr><td>Acesso ao CRM</td><td>"segredo do tablet" (o normal) ou "conta do tablet (login)".</td></tr>
+    <tr><td>Conta</td><td>Qual credencial está em uso.</td></tr>
+    <tr><td>Segredo vence em</td><td>Data e dias restantes. Nos últimos 30 dias aparece "TROCAR JÁ"; vencido, "VENCIDO há N dia(s)".</td></tr>
+    <tr><td>Grupo</td><td>A mesa escolhida.</td></tr>
+    <tr><td>Conexão com o CRM</td><td>"ok", "sem rede", "desconectado (configuracao)" (Entra recusou) ou "desconectado (autenticacao)" (CRM recusou).</td></tr>
+    <tr><td>Última consulta</td><td>Hora da última consulta bem-sucedida e quantas pendentes vieram. Tem que mudar a cada ~5 s.</td></tr>
+    <tr><td>Aguardando gravação</td><td>Quantos encerramentos ainda não foram confirmados pelo CRM (fila em memória). O normal é 0.</td></tr>
+    <tr><td>Último erro</td><td>Hora, tipo e mensagem do último erro, com o detalhe que o CRM ou o Entra devolveu. Confira a hora: pode ser um erro antigo já resolvido.</td></tr>
+    <tr><td>Últimos encerramentos</td><td>Os 20 mais recentes: hora, senha, mesa e situação. Só em memória.</td></tr>
+  </table></div>
+</section>
+
+<!-- ===================================================================== -->
+<section id="crm">
+  <h2>6. CRM: campos e consulta</h2>
+  <p>Tudo fica na tabela <b><code>ret_relacionamento</code></b> (Relacionamento), conjunto <code>ret_relacionamentos</code> na Web API, ambiente <code>https://fecap.crm2.dynamics.com</code>.</p>
+  <div class="caixa"><p>Todos os nomes de coluna e códigos de opção estão em <b><code>web/modelo/entidades.js</code></b>, e só lá. Se algo for renomeado no CRM, é o único arquivo a mudar.</p></div>
+
+  <h3>6.1 Campos que o app grava (ao encerrar cada pesquisa)</h3>
+  <div class="tabela"><table>
+    <tr><th>Campo</th><th>Rótulo no CRM</th><th>Valor</th></tr>
+    <tr><td><code>crdd3_avalieoatendimentoprestadopeloagente</code></td><td>De 0 a 10, avalie o atendimento prestado</td><td>Pergunta 1: 1 a 5, ou 0</td></tr>
+    <tr><td><code>fecap_avaliacaosistemadesenhas</code></td><td>Avaliação Sistema de Senhas (rótulo a renomear)</td><td>Pergunta 2: 1 a 5, ou 0</td></tr>
+    <tr><td><code>fecap_necessidaderesolvida</code></td><td>Necessidade resolvida</td><td><code>254930000</code> Sim · <code>254930001</code> Estou aguardando retorno · <code>254930002</code> Não · <code>254930003</code> Não respondida</td></tr>
+    <tr><td><code>fecap_situacaodapesquisa</code></td><td>Situação da pesquisa</td><td><code>254930000</code> Respondida · <code>254930001</code> Respondida parcialmente · <code>254930002</code> Cancelada pelo cliente · <code>254930003</code> Cancelada por tempo · <code>254930004</code> Cancelada por nova senha</td></tr>
+    <tr><td><code>fecap_datarealizacaopesquisa</code></td><td>Data de realização da Pesquisa</td><td>Data e hora do encerramento, em UTC</td></tr>
+  </table></div>
+  <p>A gravação é um <code>PATCH ret_relacionamentos(&lt;id&gt;)</code> com o cabeçalho <code>If-Match: *</code>, que impede criar um registro novo se o id não existir mais.</p>
+
+  <h3>6.2 Campos que o app só lê</h3>
+  <div class="tabela"><table>
+    <tr><th>Campo</th><th>Rótulo</th><th>Para que serve</th></tr>
+    <tr><td><code>ret_relacionamentoid</code></td><td>(chave)</td><td>Em qual registro gravar</td></tr>
+    <tr><td><code>fecap_gerarsenha</code></td><td>Gerar Senha?</td><td>Tem que ser Sim</td></tr>
+    <tr><td><code>fecap_atendimentonopresencial</code></td><td>Atendimento no presencial</td><td>Tem que ser Sim</td></tr>
+    <tr><td><code>fecap_senhanopresencial</code></td><td>Senha</td><td>Preenchida = senha do totem. É a senha mostrada no diagnóstico.</td></tr>
+    <tr><td><code>fecap_iniciarpesquisa</code></td><td>Iniciar Pesquisa?</td><td>Tem que ser Sim (<code>254930001</code>)</td></tr>
+    <tr><td><code>fecap_mesaasa</code></td><td>Mesa ASA</td><td><code>254930000</code> Mesa 1 · <code>254930001</code> Mesa 2 · <code>254930002</code> Mesa 3 · <code>254930003</code> Mesa 4</td></tr>
+    <tr><td><code>fecap_datadeatribuicao</code></td><td>Hora de Chamada</td><td>Início do prazo de 30 minutos</td></tr>
+    <tr><td><code>createdon</code></td><td>Data de Criação</td><td>Só senhas criadas hoje</td></tr>
+    <tr><td><code>fecap_datarealizacaopesquisa</code></td><td>Data de realização da Pesquisa</td><td>Vazio = pendente</td></tr>
+  </table></div>
+
+  <div class="caixa atencao">
+    <p><b>Campos que o app NÃO usa (não confundir):</b> <code>fecap_datadepesquisa</code> ("Data de Pesquisa", é a data em que a pesquisa foi <i>iniciada</i>) e <code>fecap_seuproblemafoiresolvido</code> (Sim/Não, a pergunta 3 do app antigo).</p>
+  </div>
+
+  <h3>6.3 A consulta exata (Mesas 3 e 4 como exemplo)</h3>
+<pre><code>GET ret_relacionamentos
+  ?$select=ret_relacionamentoid,fecap_senhanopresencial,fecap_mesaasa,fecap_datadeatribuicao
+  &amp;$filter=fecap_gerarsenha eq true
+     and fecap_atendimentonopresencial eq true
+     and fecap_senhanopresencial ne null
+     and fecap_iniciarpesquisa eq 254930001
+     and (fecap_mesaasa eq 254930002 or fecap_mesaasa eq 254930003)
+     and fecap_datarealizacaopesquisa eq null
+     and fecap_datadeatribuicao ne null
+     and createdon ge &lt;meia-noite de hoje em Brasília, em UTC&gt;
+  &amp;$orderby=fecap_datadeatribuicao desc
+  &amp;$top=5</code></pre>
+  <p>As mesas vão <b>entre parênteses</b>. O fluxo antigo da Mesa 3 e 4 não tinha, e o OData lia <code>... and mesa eq 4 or mesa eq 3</code> como <code>(... and mesa eq 4) or (mesa eq 3)</code>. Há teste automático para isso.</p>
+
+  <h3>6.4 Conferir o que foi gravado (pelo navegador)</h3>
+  <p>Logado no CRM, abra este link trocando a data pela de hoje (a hora <code>03:00:00Z</code> é a meia-noite de Brasília). Ele mostra as pesquisas encerradas no dia, a mais recente primeiro. É só leitura.</p>
+<pre><code>https://fecap.crm2.dynamics.com/api/data/v9.2/ret_relacionamentos?$select=fecap_senhanopresencial,fecap_mesaasa,fecap_datadeatribuicao,fecap_datarealizacaopesquisa,crdd3_avalieoatendimentoprestadopeloagente,fecap_avaliacaosistemadesenhas,fecap_necessidaderesolvida,fecap_situacaodapesquisa&amp;$filter=fecap_datarealizacaopesquisa%20ge%20AAAA-MM-DDT03:00:00Z&amp;$orderby=fecap_datarealizacaopesquisa%20desc&amp;$top=10</code></pre>
+  <p>As datas na Web API vêm em UTC (com <code>Z</code> no fim): <b>subtraia 3 horas</b> para ter o horário de Brasília.</p>
+</section>
+
+<!-- ===================================================================== -->
+<section id="acesso">
+  <h2>7. Acesso ao CRM (segredo de aplicativo)</h2>
+  <p>Os tablets entram no CRM com uma <b>credencial de aplicativo própria deles</b> (nunca a do totem):</p>
+  <ul>
+    <li><b>No Entra:</b> o registro de aplicativo dos tablets, com um segredo do cliente (máximo 24 meses).</li>
+    <li><b>No CRM:</b> um <b>usuário de aplicativo</b> ligado a esse registro, com a função <b>Pesquisa tablets</b>: na tabela Relacionamento, <b>Ler = Organização</b> e <b>Gravar = Organização</b>, e nada mais.</li>
+    <li><b>No tablet:</b> o segredo é instalado pelo adb e fica cifrado com uma chave do Android Keystore, que não sai do aparelho. Uma cópia do APK não dá acesso a nada.</li>
+  </ul>
+
+  <h3>7.1 Instalar ou trocar a credencial num tablet</h3>
+  <p>Pré-requisitos: app instalado, PIN definido, depuração USB ligada, tablet no cabo, só ele conectado (feche o emulador). Os valores ficam no Entra, no registro dos tablets: <b>Visão geral</b> (ID do aplicativo e ID do diretório) e <b>Certificados e segredos</b> (o <b>Valor</b> do segredo, não o "ID do segredo", e a data em "Expira").</p>
+<pre><code>$adb = "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe"
+$segredo = Read-Host "Segredo"
+$segredo.Length
+&amp; $adb shell "am start -n br.fecap.asa.pesquisa/.AtividadePrincipal --es tenant ID_DO_LOCATARIO --es cliente ID_DO_CLIENTE --es segredo '$segredo' --es venceEm AAAA-MM-DD --es pin SEU_PIN"
+Remove-Variable segredo</code></pre>
+  <ul>
+    <li><code>Read-Host</code> evita que o segredo fique no histórico do PowerShell. <code>$segredo.Length</code> tem que mostrar um número (~40).</li>
+    <li>O aviso <i>"Activity not started, intent has been delivered to currently running top-most instance"</i> é normal: o app já estava aberto.</li>
+    <li>No tablet aparece <b>"Credencial instalada."</b>. Outros avisos possíveis: "PIN incorreto: nada foi alterado." · "Faltou tenant, cliente ou segredo" · "venceEm deve estar no formato aaaa-mm-dd".</li>
+    <li>Rodar de novo <b>substitui</b> a credencial anterior.</li>
+    <li>O mesmo segredo serve para os três tablets.</li>
+  </ul>
+
+  <h3>7.2 Trocar o segredo antes de vencer</h3>
+  <ol>
+    <li>Crie um segredo novo no Entra (não apague o antigo ainda) e copie o <b>Valor</b> na hora.</li>
+    <li>Em cada tablet: manutenção → Sair do modo quiosque → Abrir configurações do Android → ligar a depuração USB → rodar o comando 7.1 com o segredo e a data novos → Voltar ao modo quiosque.</li>
+    <li>Com os três mostrando "Conexão com o CRM: ok", apague o segredo antigo no Entra.</li>
+  </ol>
+
+  <h3>7.3 Voltar ao login por conta (alternativa)</h3>
+<pre><code>&amp; $adb shell "am start -n br.fecap.asa.pesquisa/.AtividadePrincipal --ez apagarCredencial true --es pin SEU_PIN"</code></pre>
+  <p>O tablet passa a pedir login da conta (tablet01, 02, 03) pela manutenção. Esse modo exige o registro como cliente público e o consentimento do administrador no Entra (<code>docs/ENTRA.md</code>).</p>
+</section>
+
+<!-- ===================================================================== -->
+<section id="quiosque">
+  <h2>8. Modo quiosque</h2>
+  <p>Com o app registrado como <b>dono do dispositivo</b> (device owner), o tablet fica travado de verdade:</p>
+  <ul>
+    <li>sem barra de status, sem Início, sem apps recentes, sem tela de bloqueio;</li>
+    <li>o app é a tela inicial do Android e <b>abre sozinho quando o tablet liga</b>;</li>
+    <li>a tela não apaga (o app pede tela acesa enquanto está aberto, e a política "manter ligado na tomada" cobre o resto);</li>
+    <li>com PIN, mesa e credencial instalados, a <b>depuração USB é bloqueada</b>, para ninguém tirar coisas do tablet pelo cabo.</li>
+  </ul>
+  <p>Sem ser dono, o app só consegue a fixação de tela comum do Android, que se desfaz segurando Voltar + Visão geral. Serve para teste, não para produção.</p>
+
+  <h3>8.1 Suspender o quiosque</h3>
+  <p>Manutenção → <b>Sair do modo quiosque</b>. Durante a suspensão:</p>
+  <ul>
+    <li>o Android fica livre, o botão Início leva à tela inicial normal, a barra de status volta e a depuração USB pode ser ligada;</li>
+    <li>o app continua funcionando e mostrando pesquisas.</li>
+  </ul>
+  <p>A suspensão termina quando:</p>
+  <ul>
+    <li>alguém toca em <b>Voltar ao modo quiosque</b> na manutenção;</li>
+    <li>passam <b>15 minutos</b> (para um tablet esquecido aberto não ficar assim o dia todo);</li>
+    <li>o app é <b>atualizado</b> ou o tablet <b>reinicia</b>.</li>
+  </ul>
+
+  <h3>8.2 Samsung: alça de multijanela</h3>
+  <p>Nos tablets Samsung, desligue em <b>Configurações → Recursos avançados → Multi janela</b>: <b>Menu Multi janela</b> (os três pontinhos no topo), <b>Deslizar para janela pop-up</b> e <b>Deslizar para tela dividida</b>. Sem isso dá para minimizar o app mesmo no quiosque. O app também pede para não ser redimensionado, mas tablets com Android 12 ou mais novo podem ignorar esse pedido.</p>
+
+  <h3>8.3 Deixar o tablet "normal" de novo</h3>
+  <ul>
+    <li><b>Por um tempo:</b> Sair do modo quiosque.</li>
+    <li><b>De vez:</b> o app dono não pode ser desinstalado. É preciso <b>restaurar de fábrica</b> (Configurações → Sistema → Redefinir, com o quiosque suspenso; ou pelo modo de recuperação, segurando Liga + Volume com o tablet desligado). Isso apaga também a configuração de Wi-Fi.</li>
+    <li>Tablet aposentado: se nenhum outro usar o segredo, apague-o no Entra.</li>
+  </ul>
+</section>
+
+<!-- ===================================================================== -->
+<section id="comandos">
+  <h2>9. Comandos (PowerShell)</h2>
+  <div class="caixa atencao"><p>Em toda janela nova do PowerShell, rode primeiro a linha do <code>$adb</code>. Ela só vale na janela em que foi criada.</p></div>
+
+  <div class="tabela"><table>
+    <tr><th>Para quê</th><th>Comando</th></tr>
+    <tr><td>Caminho do adb</td><td><code>$adb = "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe"</code></td></tr>
+    <tr><td>Ver aparelhos conectados</td><td><code>&amp; $adb devices</code></td></tr>
+    <tr><td>Instalar / atualizar o app</td><td><code>&amp; $adb install -r "C:\...\android\app\build\outputs\apk\debug\app-debug.apk"</code></td></tr>
+    <tr><td>Instalar o APK gerado pelo ▶ Run (pasta <code>intermediates</code>)</td><td><code>&amp; $adb install -r -t "C:\...\android\app\build\intermediates\apk\debug\app-debug.apk"</code></td></tr>
+    <tr><td>Escolher o aparelho, com mais de um conectado</td><td><code>&amp; $adb -s CODIGO install -r "..."</code> (o código sai do <code>devices</code>)</td></tr>
+    <tr><td>Tornar o app dono do dispositivo</td><td><code>&amp; $adb shell dpm set-device-owner br.fecap.asa.pesquisa/.Administrador</code></td></tr>
+    <tr><td>Conferir quem é o dono</td><td><code>&amp; $adb shell dpm list-owners</code></td></tr>
+    <tr><td>Ver contas que impedem o dono</td><td><code>&amp; $adb shell dumpsys account</code></td></tr>
+    <tr><td>Instalar a credencial</td><td>ver <a href="#acesso">seção 7.1</a></td></tr>
+    <tr><td>Apagar a credencial</td><td>ver <a href="#acesso">seção 7.3</a></td></tr>
+    <tr><td>Achar o APK gerado</td><td><code>Get-ChildItem -Recurse -Filter app-debug.apk | Select-Object FullName, LastWriteTime</code> (no terminal do Android Studio)</td></tr>
+    <tr><td>Criar a chave de assinatura</td><td><code>keytool -genkeypair -v -keystore pesquisa-asa.jks -alias pesquisa -keyalg RSA -keysize 2048 -validity 10000</code> (se o keytool não for achado: <code>&amp; "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" ...</code>)</td></tr>
+    <tr><td>Ver o SHA1 da chave</td><td><code>keytool -list -v -keystore pesquisa-asa.jks -alias pesquisa</code></td></tr>
+  </table></div>
+
+  <h3>Por que não usar o ▶ Run num tablet dono</h3>
+  <p>O ▶ Run tenta forçar o fechamento do app antes de instalar, e o Android protege o app dono do dispositivo: dá <i>"Couldn't terminate previous instance of app"</i>. Use sempre <code>adb install -r</code>. O ▶ Run só serve no emulador ou num tablet que não é dono.</p>
+</section>
+
+<!-- ===================================================================== -->
+<section id="novo-tablet">
+  <h2>10. Preparar um tablet novo (passo a passo)</h2>
+  <ol>
+    <li><b>Conferir</b> se o tablet não é gerenciado por outro sistema da TI (Configurações → Segurança → Apps de administração do dispositivo).</li>
+    <li><b>Remover todas as contas</b> (Configurações → Contas): Google, Samsung, Microsoft… Não precisa formatar; o Wi-Fi da FECAP continua.</li>
+    <li><b>Data e hora automáticas</b>, fuso de São Paulo (o prazo de 30 min usa o relógio do tablet).</li>
+    <li><b>Samsung:</b> desligar a multijanela (<a href="#quiosque">seção 8.2</a>).</li>
+    <li><b>Opções do desenvolvedor:</b> Configurações → Sobre → tocar 7 vezes em "Número da versão". Ligar <b>Depuração USB</b>.</li>
+    <li><b>Cabo no computador</b>, aceitar "Permitir depuração USB", conferir com <code>&amp; $adb devices</code>.</li>
+    <li><b>Instalar o app:</b> <code>&amp; $adb install -r "...\app-debug.apk"</code> (ou o release).</li>
+    <li><b>Abrir o app:</b> a manutenção abre sozinha. Definir o <b>PIN</b> e escolher a <b>mesa</b>.</li>
+    <li><b>Instalar a credencial</b> (<a href="#acesso">seção 7.1</a>) e conferir "Conexão com o CRM: ok".</li>
+    <li><b>Tornar dono:</b> <code>&amp; $adb shell dpm set-device-owner br.fecap.asa.pesquisa/.Administrador</code> → deve responder <code>Success</code>.</li>
+    <li><b>Fechar e abrir o app</b> (ou reiniciar): diagnóstico com "Modo quiosque: ativo (dono do dispositivo)". A depuração USB é bloqueada sozinha.</li>
+    <li><b>Tirar o cabo</b> e reiniciar o tablet para testar: o app deve abrir sozinho.</li>
+  </ol>
+  <div class="tabela"><table>
+    <tr><th>Erro no <code>set-device-owner</code></th><th>Causa</th></tr>
+    <tr><td><code>already some accounts on the device</code></td><td>Ainda há conta. <code>dumpsys account</code> mostra qual.</td></tr>
+    <tr><td><code>already several users</code></td><td>Outro usuário, convidado ou perfil de trabalho: remova em Configurações → Usuários.</td></tr>
+    <tr><td><code>already provisioned</code> / <code>already has a device owner</code></td><td>Só formatando, ou outro sistema já é dono (TI).</td></tr>
+  </table></div>
+  <p>Ativar o app pela tela "Apps de administração do dispositivo" <b>não</b> é o mesmo que ser dono e não liga o quiosque. Tem que ser o comando.</p>
+</section>
+
+<!-- ===================================================================== -->
+<section id="atualizar">
+  <h2>11. Atualizar o app nos tablets</h2>
+  <ol>
+    <li><b>Android Studio:</b> Git → Pull. Depois <b>Build → Build App Bundle(s) / APK(s) → Build APK(s)</b> e espere "APK(s) generated successfully". Para produção, o ideal é o <b>release</b>: Build → Generate Signed App Bundle or APK → APK → release, com o <code>pesquisa-asa.jks</code>.</li>
+    <li><b>Tablet:</b> manutenção → <b>Sair do modo quiosque</b> → <b>Abrir configurações do Android</b> → Opções do desenvolvedor → ligar <b>Depuração USB</b> (o bloqueio a desligou; se as opções sumiram, toque 7 vezes em "Número da versão" de novo). Cabo, Permitir.</li>
+    <li><b>PowerShell:</b> <code>&amp; $adb install -r "caminho do apk"</code> → <code>Success</code>.</li>
+    <li><b>Abrir o app:</b> o quiosque e o bloqueio da depuração voltam sozinhos. PIN, mesa e credencial continuam.</li>
+  </ol>
+  <div class="caixa perigo">
+    <p><b>Nunca desinstale</b> para contornar um erro: o app dono não pode ser desinstalado, e PIN, mesa e credencial se perderiam. O APK novo tem que ser assinado com a <b>mesma chave</b>; se o adb disser <code>INSTALL_FAILED_UPDATE_INCOMPATIBLE</code>, confira se o <code>android\assinatura.properties</code> está na pasta.</p>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<section id="problemas">
+  <h2>12. Solução de problemas</h2>
+  <div class="tabela"><table>
+    <tr><th>Sintoma</th><th>Causa provável</th><th>O que fazer</th></tr>
+    <tr><td>"Instalação incompleta"</td><td>Credencial ausente ou recusada pelo Entra</td><td>Diagnóstico → Último erro. <code>AADSTS7000215</code>: usou o ID do segredo ou o Valor errado. <code>AADSTS700016</code>: o <code>cliente</code> está errado (usou o ID do objeto). <code>AADSTS90002</code>: <code>tenant</code> errado. <code>expired</code>: segredo vencido. Reinstale a credencial.</td></tr>
+    <tr><td>"Tablet desconectado"</td><td>O CRM recusou (401/403)</td><td>Conferir o usuário de aplicativo e a função "Pesquisa tablets". Se o erro citar <code>prvRead…</code>, acrescente só a permissão nomeada.</td></tr>
+    <tr><td>"Sem conexão"</td><td>Sem rede</td><td>Volta sozinho. Se persistir, ver o Wi-Fi.</td></tr>
+    <tr><td>Pesquisa demora a aparecer</td><td>O CRM marca "Iniciar Pesquisa" ou a "Hora de Chamada" com atraso (fluxos do sistema)</td><td>Confira "Última consulta" (tem que andar a cada 5 s). Compare com os horários dos campos no CRM.</td></tr>
+    <tr><td>Pesquisa não aparece</td><td>Algum campo do filtro não bate</td><td>Ver o registro no CRM: Gerar Senha, Atendimento no presencial, Senha, Iniciar Pesquisa = Sim, Mesa, Hora de Chamada, criado hoje, sem data de realização.</td></tr>
+    <tr><td><code>device 'XXXX' not found</code> no Android Studio</td><td>Depuração bloqueada pelo quiosque</td><td>Sair do modo quiosque e ligar a depuração.</td></tr>
+    <tr><td><code>Couldn't terminate previous instance of app</code></td><td>▶ Run num tablet dono</td><td>Use <code>adb install -r</code>.</td></tr>
+    <tr><td><code>INSTALL_FAILED_TEST_ONLY</code></td><td>APK da pasta <code>intermediates</code></td><td>Acrescente <code>-t</code>, ou use o APK de <code>outputs</code>.</td></tr>
+    <tr><td><code>more than one device/emulator</code></td><td>Emulador aberto ou dois tablets no cabo</td><td>Feche o emulador, ou use <code>-s CODIGO</code>.</td></tr>
+    <tr><td><code>failed to stat ... No such file</code></td><td>Caminho do APK errado</td><td>Ache o arquivo com <code>Get-ChildItem</code> (seção 9).</td></tr>
+    <tr><td>"A expressão depois de '&amp;' ... objeto inválido"</td><td>PowerShell novo, sem a variável <code>$adb</code></td><td>Rode a linha do <code>$adb</code> de novo.</td></tr>
+    <tr><td><code>unable to find valid certification path</code> no build</td><td>Proxy da rede da FECAP</td><td>Ver <a href="#desenvolver">seção 16</a> (certificados do Windows).</td></tr>
+    <tr><td>Três pontinhos no topo minimizam o app</td><td>Multijanela da Samsung</td><td>Seção 8.2.</td></tr>
+    <tr><td>PIN esquecido</td><td>—</td><td>Não há recuperação pelo app. Restaurar de fábrica e preparar de novo.</td></tr>
+  </table></div>
+</section>
+
+<!-- ===================================================================== -->
+<section id="onde-mexer">
+  <h2>13. Onde mexer no código</h2>
+  <div class="tabela"><table>
+    <tr><th>Quero mudar</th><th>Arquivo</th><th>Observação</th></tr>
+    <tr><td>Intervalo das consultas, prazo de 30 min, alerta de 30 s, agradecimento de 10 s, limite da consulta, fuso, idioma padrão, tempo segurando o logo, fechamento da manutenção</td><td><code>web/configuracao.json</code></td><td>Cada chave tem um <code>_comentario</code> explicando.</td></tr>
+    <tr><td>Grupos de mesas (quais mesas cada tablet pode atender)</td><td><code>web/configuracao.json</code> → <code>grupos</code></td><td>A chave do grupo é o que fica guardado no tablet.</td></tr>
+    <tr><td>Qualquer texto das telas, em PT e EN</td><td><code>web/visao/idiomas.json</code></td><td>Manutenção e avisos só em PT; o que faltar em EN cai no PT.</td></tr>
+    <tr><td>Nome de coluna ou código de opção do CRM</td><td><code>web/modelo/entidades.js</code></td><td>Único lugar com nomes do CRM.</td></tr>
+    <tr><td>Regras de encerramento, prazo, triagem das pendentes</td><td><code>web/modelo/pesquisa.js</code></td><td>Funções puras, com testes em <code>testes/pesquisa.test.js</code>.</td></tr>
+    <tr><td>O filtro da consulta e o corpo da gravação</td><td><code>web/modelo/dataverse.js</code></td><td>Testes em <code>testes/dataverse.test.js</code>.</td></tr>
+    <tr><td>O ciclo (quando consulta, troca, alerta, agradece, regrava)</td><td><code>web/controlador/ciclo.js</code></td><td>Testes em <code>testes/ciclo.test.js</code>.</td></tr>
+    <tr><td>Cores, tamanhos, posições</td><td><code>web/visao/tablet.css</code></td><td>Cores das notas: <code>--nota-1</code> a <code>--nota-5</code> no topo.</td></tr>
+    <tr><td>Estrutura das telas (botões, perguntas)</td><td><code>web/index.html</code></td><td></td></tr>
+    <tr><td>Comportamento das telas (marcar, aviso do que falta, idioma, alerta)</td><td><code>web/visao/telas.js</code></td><td></td></tr>
+    <tr><td>Manutenção (PIN, botões, diagnóstico)</td><td><code>web/visao/manutencao.js</code></td><td>Tamanho do PIN: aqui e em <code>Instalacao.kt</code>.</td></tr>
+    <tr><td>Ícones (carinhas, estrelas, polegares, relógio) e logos</td><td><code>web/visao/assets/</code></td><td>Recortados das telas originais; usados como máscara (a cor vem do CSS).</td></tr>
+    <tr><td>Endereço do CRM</td><td><code>android/app/src/main/res/values/configuracao.xml</code></td><td>O token só vai para esse endereço.</td></tr>
+    <tr><td>Tempo da suspensão do quiosque (15 min)</td><td><code>AtividadePrincipal.kt</code> → <code>MINUTOS_DE_SUSPENSAO</code></td><td></td></tr>
+    <tr><td>O que o quiosque bloqueia</td><td><code>Quiosque.kt</code></td><td></td></tr>
+    <tr><td>Versão do app (aparece no diagnóstico)</td><td><code>android/app/build.gradle.kts</code> → <code>versionCode</code> e <code>versionName</code></td><td>Suba os dois a cada versão entregue.</td></tr>
+    <tr><td>Nome do app no Android</td><td><code>android/app/src/main/res/values/strings.xml</code></td><td></td></tr>
+    <tr><td>Ícone do app</td><td><code>android/app/src/main/res/mipmap-*/ic_launcher.png</code></td><td></td></tr>
+  </table></div>
+  <div class="caixa atencao">
+    <p>Toda mudança em <code>web/</code> ou <code>android/</code> só chega aos tablets gerando um APK novo e instalando (<a href="#atualizar">seção 11</a>). Antes, rode <code>npm test</code> e confira no simulador.</p>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<section id="arquivos">
+  <h2>14. Mapa dos arquivos</h2>
+
+  <h3>web/ — a aplicação (roda no WebView e no navegador)</h3>
+  <div class="tabela"><table>
+    <tr><th>Arquivo</th><th>Papel</th><th>O que faz</th></tr>
+    <tr><td><code>index.html</code></td><td>Visão</td><td>As telas: descanso, pesquisa, agradecimento, manutenção. Um palco de 1600×1000 escalado para o tablet.</td></tr>
+    <tr><td><code>principal.js</code></td><td>Entrada</td><td>Lê a configuração e os textos, escolhe a plataforma (Android ou simulador), cria o ciclo, as telas e a manutenção. Na primeira vez, abre a manutenção.</td></tr>
+    <tr><td><code>configuracao.json</code></td><td>Configuração</td><td>Tempos e grupos de mesas, iguais para os três tablets.</td></tr>
+    <tr><td><code>plataforma.js</code></td><td>Ponte</td><td>Fala com a casca Android (ver seção 15).</td></tr>
+    <tr><td><code>modelo/entidades.js</code></td><td>Modelo</td><td>Nomes de tabela, colunas e códigos de opção do CRM.</td></tr>
+    <tr><td><code>modelo/pesquisa.js</code></td><td>Modelo</td><td>Regras puras: respostas, situação de cada encerramento, registro a gravar, prazo, início do dia em Brasília, triagem das pendentes, perguntas em branco.</td></tr>
+    <tr><td><code>modelo/dataverse.js</code></td><td>Modelo</td><td>Monta o filtro e a consulta, lê as linhas, monta o corpo da gravação, classifica os erros (rede, autenticação, configuração, transitório, definitivo).</td></tr>
+    <tr><td><code>controlador/ciclo.js</code></td><td>Controlador</td><td>Consulta periódica, decisão de tela, cronômetros (vencimento, alerta, agradecimento), fila de gravação em memória, estado de conexão e diagnóstico.</td></tr>
+    <tr><td><code>visao/telas.js</code></td><td>Visão</td><td>Desenha as telas e devolve os toques ao controlador. Palco, textos, idioma, cores, alerta, aviso do que falta, avisos de conexão, toque longo no logo.</td></tr>
+    <tr><td><code>visao/manutencao.js</code></td><td>Visão</td><td>PIN, escolha de mesa, conta, botões do quiosque e diagnóstico.</td></tr>
+    <tr><td><code>visao/idiomas.json</code></td><td>Visão</td><td>Todos os textos, PT e EN.</td></tr>
+    <tr><td><code>visao/tablet.css</code></td><td>Visão</td><td>Estilo, com as cores da marca e a escala de notas.</td></tr>
+    <tr><td><code>visao/assets/</code></td><td>Visão</td><td>Logos e ícones.</td></tr>
+    <tr><td><code>simulador/</code></td><td>Desenvolvimento</td><td>CRM falso em memória, plataforma simulada e painel para chamar senhas e simular falhas. <b>Fica fora do APK.</b></td></tr>
+  </table></div>
+
+  <h3>android/ — a casca (Kotlin), pacote <code>br.fecap.asa.pesquisa</code></h3>
+  <div class="tabela"><table>
+    <tr><th>Arquivo</th><th>O que faz</th></tr>
+    <tr><td><code>AtividadePrincipal.kt</code></td><td>A única tela: WebView com a aplicação, tela acesa, barras escondidas, botão Voltar desativado, recebimento da credencial pelo adb, aplicação e suspensão do quiosque (15 min).</td></tr>
+    <tr><td><code>Ponte.kt</code></td><td>Recebe os pedidos do JavaScript e responde. Cada pedido roda numa thread própria.</td></tr>
+    <tr><td><code>Autenticacao.kt</code></td><td>Escolhe o modo de acesso a cada chamada: segredo, se houver credencial instalada; senão, conta.</td></tr>
+    <tr><td><code>AutenticacaoPorSegredo.kt</code></td><td>Token de aplicativo (client credentials) com o segredo do Cofre, guardado em memória e renovado antes de expirar.</td></tr>
+    <tr><td><code>AutenticacaoPorConta.kt</code></td><td>Login com a conta do tablet pela biblioteca MSAL (modo alternativo).</td></tr>
+    <tr><td><code>Cofre.kt</code></td><td>Guarda tenant, cliente, vencimento e o segredo, este cifrado (AES-GCM) com chave do Android Keystore.</td></tr>
+    <tr><td><code>ClienteDataverse.kt</code></td><td>Faz a chamada HTTP ao CRM: só caminho relativo, só GET e PATCH, põe o token e os cabeçalhos OData.</td></tr>
+    <tr><td><code>Instalacao.kt</code></td><td>Grupo de mesas e PIN (hash com sal) guardados no aparelho.</td></tr>
+    <tr><td><code>Quiosque.kt</code></td><td>Políticas de dono do dispositivo: travamento, tela inicial, barra de status, tela de bloqueio, tela acesa na tomada, bloqueio da depuração; e a saída.</td></tr>
+    <tr><td><code>AoLigar.kt</code></td><td>Quando o tablet liga, religa a tela inicial do app e o abre (cobre um reinício no meio de uma suspensão).</td></tr>
+    <tr><td><code>Rede.kt</code></td><td>Avisa a aplicação quando a rede volta, para consultar na hora.</td></tr>
+    <tr><td><code>Administrador.kt</code></td><td>Existe só para o app poder ser dono do dispositivo.</td></tr>
+    <tr><td><code>AndroidManifest.xml</code></td><td>Permissões, a tela, o alias <code>.Inicio</code> (tela inicial, desligado na suspensão), o receptor de boot e o administrador.</td></tr>
+    <tr><td><code>res/values/configuracao.xml</code></td><td>Endereço do CRM e versão da API.</td></tr>
+    <tr><td><code>res/raw/msal_config.json</code></td><td>Só para o modo por conta (IDs do Entra).</td></tr>
+    <tr><td><code>app/build.gradle.kts</code></td><td>Versão, dependências, assinatura (lê <code>assinatura.properties</code>) e a cópia da pasta <code>web/</code> para dentro do APK.</td></tr>
+  </table></div>
+
+  <h3>Outros</h3>
+  <div class="tabela"><table>
+    <tr><td><code>testes/</code></td><td>Testes automáticos (<code>npm test</code>): regras, consulta e o ciclo inteiro com relógio falso.</td></tr>
+    <tr><td><code>docs/</code></td><td>Roteiros em Markdown e este manual.</td></tr>
+    <tr><td><code>android/assinatura.properties</code></td><td>Caminho e senhas da chave de assinatura. <b>Não vai para o Git.</b></td></tr>
+    <tr><td><code>android/pesquisa-asa.jks</code></td><td>A chave de assinatura. <b>Não vai para o Git.</b> Guardar no cofre.</td></tr>
+  </table></div>
+</section>
+
+<!-- ===================================================================== -->
+<section id="arquitetura">
+  <h2>15. Arquitetura e ponte JavaScript ↔ Android</h2>
+<div class="fluxo">  Telas (visao/)  ──toques──>  Ciclo (controlador/)  ──regras──>  pesquisa.js
+        ^                          │
+        └──── o que mostrar ───────┤
+                                   v
+                             Crm (dataverse.js) ── monta caminho e corpo
+                                   │
+                         PlataformaAndroid (plataforma.js)
+                                   │  PonteAndroid.chamar(id, "requisitar", {...})
+                                   v
+                     Ponte.kt ──> ClienteDataverse.kt ──token──> Autenticacao.kt ──> Cofre.kt
+                                   │
+                                   v
+                     https://fecap.crm2.dynamics.com/api/data/v9.2/...</div>
+  <p>O <b>token nunca passa pelo JavaScript</b>: a casca recebe só o caminho relativo, põe o endereço e o token, e devolve status e corpo. Isso também evita depender de CORS no WebView.</p>
+
+  <h3>Métodos da ponte</h3>
+  <div class="tabela"><table>
+    <tr><th>Método</th><th>Pede PIN?</th><th>O que faz</th></tr>
+    <tr><td><code>instalacao</code></td><td>não</td><td>Grupo, se há PIN, conta, modo de acesso, vencimento do segredo, estado do quiosque, se está suspenso, versão.</td></tr>
+    <tr><td><code>conferirPin</code></td><td>—</td><td>Confere o PIN digitado.</td></tr>
+    <tr><td><code>definirPin</code></td><td>o atual</td><td>Define ou troca o PIN (na primeira vez, sem PIN atual).</td></tr>
+    <tr><td><code>definirGrupo</code></td><td>sim</td><td>Guarda a mesa.</td></tr>
+    <tr><td><code>entrar</code> / <code>sair</code></td><td>sim</td><td>Login e logout da conta (modo por conta).</td></tr>
+    <tr><td><code>sairDoQuiosque</code></td><td>sim</td><td>Suspende o quiosque por até 15 min.</td></tr>
+    <tr><td><code>voltarAoQuiosque</code></td><td>sim</td><td>Reativa o quiosque.</td></tr>
+    <tr><td><code>abrirConfiguracoes</code></td><td>sim</td><td>Abre as Configurações (só suspenso).</td></tr>
+    <tr><td><code>requisitar</code></td><td>não</td><td>Chamada ao CRM (GET ou PATCH, caminho relativo).</td></tr>
+  </table></div>
+  <p>Eventos da casca para a aplicação: <code>rede</code> (a rede voltou: consultar na hora) e <code>credencial</code> (credencial instalada: consultar na hora).</p>
+
+  <h3>Valores fixos no código</h3>
+  <div class="tabela"><table>
+    <tr><th>Valor</th><th>Onde</th></tr>
+    <tr><td>Suspensão do quiosque: 15 min</td><td><code>AtividadePrincipal.kt</code> → <code>MINUTOS_DE_SUSPENSAO</code></td></tr>
+    <tr><td>PIN de 4 a 8 números</td><td><code>Instalacao.kt</code> e <code>manutencao.js</code></td></tr>
+    <tr><td>Histórico do diagnóstico: 20 encerramentos</td><td><code>ciclo.js</code> → <code>TAMANHO_DO_HISTORICO</code></td></tr>
+    <tr><td>Tempo limite das chamadas HTTP: 15 s para conectar, 20 s para ler</td><td><code>ClienteDataverse.kt</code></td></tr>
+    <tr><td>Token renovado 60 s antes de expirar</td><td><code>AutenticacaoPorSegredo.kt</code></td></tr>
+    <tr><td>Aviso "TROCAR JÁ": 30 dias antes do vencimento</td><td><code>manutencao.js</code> → <code>descreverVencimento</code></td></tr>
+  </table></div>
+</section>
+
+<!-- ===================================================================== -->
+<section id="desenvolver">
+  <h2>16. Desenvolver e testar</h2>
+  <h3>Sem Android Studio</h3>
+<pre><code>npm test                                       # 39 testes, precisa do Node 18+
+python -m http.server 8000 --directory web     # simulador: http://localhost:8000</code></pre>
+  <p>O simulador sobe com um CRM falso e um painel para chamar senhas nas mesas, chamar senhas já vencidas e simular falhas (sem rede, login expirado, CRM indisponível, pedido recusado). Segure o logo por 3 s para a manutenção. No emulador, o mesmo simulador abre no Chrome em <code>http://10.0.2.2:8000</code>.</p>
+
+  <h3>Android Studio</h3>
+  <ul>
+    <li>Abra a pasta <b><code>android/</code></b> (não a raiz) em File → Open.</li>
+    <li>Ignore os avisos de "AGP Upgrade" e "Gradle Daemon toolchain".</li>
+    <li>Emulador para testes: Device Manager → + → Tablet → Pixel Tablet → API 35, variante <b>Google APIs</b>.</li>
+    <li>Console do JavaScript (build de debug): <code>chrome://inspect</code> no Chrome do computador.</li>
+  </ul>
+
+  <h3>Na rede da FECAP (erro de certificado no build)</h3>
+  <p>O proxy da FECAP inspeciona as conexões. Crie <code>%USERPROFILE%\.gradle\gradle.properties</code> (do usuário, não do projeto) com:</p>
+<pre><code>org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8 -Djavax.net.ssl.trustStoreType=Windows-ROOT
+systemProp.javax.net.ssl.trustStoreType=Windows-ROOT</code></pre>
+  <p>Feche e abra o Android Studio. Atalho para um dia só: painel Gradle → Toggle Offline Mode.</p>
+
+  <h3>Assinatura</h3>
+  <p><code>android/assinatura.properties</code> (fora do Git):</p>
+<pre><code>arquivo=pesquisa-asa.jks
+senhaDoArquivo=...
+apelido=pesquisa
+senhaDaChave=...
+hashDaAssinatura=...</code></pre>
+  <p>As duas senhas são iguais. Erro <i>"failed to decrypt safe contents entry"</i> no build = senha errada nesse arquivo.</p>
+</section>
+
+<!-- ===================================================================== -->
+<section id="cofre">
+  <h2>17. O que guardar no cofre da TI</h2>
+  <ul>
+    <li><b><code>pesquisa-asa.jks</code></b> e a senha dele. Sem eles não dá para atualizar o app nos tablets.</li>
+    <li>O <b>Valor do segredo</b> do registro dos tablets, o <b>ID do aplicativo (cliente)</b>, o <b>ID do diretório (locatário)</b> e a <b>data de vencimento</b> (hoje: <b>16/10/2028</b>).</li>
+    <li>Os <b>PINs</b> de manutenção dos três tablets.</li>
+    <li>Um <b>lembrete na agenda</b> um mês antes do vencimento do segredo.</li>
+  </ul>
+</section>
+
+<!-- ===================================================================== -->
+<section id="decisoes">
+  <h2>18. Decisões e pendências</h2>
+  <h3>Decisões que não devem ser desfeitas sem conversa</h3>
+  <ul>
+    <li>A data de fim é <code>fecap_datarealizacaopesquisa</code>, não <code>fecap_datadepesquisa</code>.</li>
+    <li>Só senhas criadas hoje: sem isso, o histórico deixado pelo app antigo seria gravado como "por tempo".</li>
+    <li>Data gravada em UTC. O fluxo antigo subtraía 3 h; por isso o <b>histórico anterior aparece 3 h mais cedo</b> no CRM.</li>
+    <li>"Nova senha" só para quem tinha a pesquisa na tela; o resto é "por tempo".</li>
+    <li>Enviar exige as três respostas.</li>
+    <li>Segredo próprio dos tablets, fora do APK, papel mínimo no CRM.</li>
+    <li>Suspender o quiosque desliga o app como tela inicial; a suspensão acaba por botão, prazo, atualização ou reinício.</li>
+  </ul>
+  <h3>Pendências conhecidas</h3>
+  <ul>
+    <li><b>Desligar os apps antigos e os seis fluxos</b> do Power Automate no dia da troca, senão os dois sistemas gravam no mesmo registro.</li>
+    <li><b>Atraso para a pesquisa aparecer</b> (até ~1 min observado): provável demora dos fluxos do CRM que marcam "Iniciar Pesquisa" ou a "Hora de Chamada". A investigar com os horários dos campos.</li>
+    <li><code>fecap_iniciarpesquisa</code> nunca volta para "Não" (nem no app antigo, nem no novo).</li>
+    <li>Renomear o rótulo de "Avaliação Sistema de Senhas" no CRM.</li>
+    <li>PIN sem bloqueio por tentativas.</li>
+    <li>Fontes da marca não estão no projeto (o tablet usa Roboto).</li>
+    <li>Sem aviso automático de vencimento do segredo além do diagnóstico e da agenda.</li>
+  </ul>
+</section>
+
+</main>
+</div>
+
+<footer>Pesquisa ASA · ASA / FECAP · este manual fica em <code>docs/MANUAL.html</code> no repositório <code>pesquisa-asa</code></footer>
+
+<script>
+  // Botao "copiar" em cada bloco de codigo. Sem dependencias: o manual tem que
+  // abrir offline, direto do arquivo.
+  document.querySelectorAll("pre").forEach(function (bloco) {
+    var botao = document.createElement("button");
+    botao.className = "copiar";
+    botao.type = "button";
+    botao.textContent = "copiar";
+    botao.addEventListener("click", function () {
+      var texto = bloco.querySelector("code").innerText;
+      var feito = function () { botao.textContent = "copiado"; setTimeout(function () { botao.textContent = "copiar"; }, 1500); };
+      if (navigator.clipboard) navigator.clipboard.writeText(texto).then(feito, function () {});
+    });
+    bloco.appendChild(botao);
+  });
+</script>
+</body>
+</html>
