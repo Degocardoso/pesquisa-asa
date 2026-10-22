@@ -42,7 +42,8 @@ export class PlataformaAndroid {
 
   // -- contrato -----------------------------------------------------------
 
-  // { grupo, temPin, conta, acesso ("segredo" | "conta"), segredoVenceEm, quiosque, versao }
+  // { grupo, temPin, conta, acesso ("segredo" | "conta"), segredoVenceEm,
+  //   quiosque, quiosqueSuspenso, versao }
   instalacao() { return this._chamar("instalacao"); }
 
   conferirPin(pin) { return this._chamar("conferirPin", { pin }); }
@@ -51,6 +52,8 @@ export class PlataformaAndroid {
   entrar(pin) { return this._chamar("entrar", { pin }); }
   sair(pin) { return this._chamar("sair", { pin }); }
   sairDoQuiosque(pin) { return this._chamar("sairDoQuiosque", { pin }); }
+  voltarAoQuiosque(pin) { return this._chamar("voltarAoQuiosque", { pin }); }
+  abrirConfiguracoes(pin) { return this._chamar("abrirConfiguracoes", { pin }); }
 
   // A casca poe a URL do ambiente e o token; aqui so vai o caminho relativo.
   requisitar(pedido) { return this._chamar("requisitar", pedido); }

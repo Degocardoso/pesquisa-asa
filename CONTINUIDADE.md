@@ -94,6 +94,13 @@ pelo adb e cifrado com chave do Android Keystore), depuração USB bloqueada
 depois da instalação, vencimento visível no diagnóstico. O modo por conta
 continua no código; apagar a credencial volta a ele.
 
+**Suspender o quiosque desliga o app como tela inicial** (corrigido em outubro
+de 2026). Antes, sair do quiosque e tocar em Início reabria o app, que voltava
+a travar: virava um loop. Agora a tela inicial do app é um `activity-alias`
+desligado durante a suspensão, e a suspensão só acaba pelo botão "Voltar ao
+modo quiosque", pelo prazo automático de 15 minutos, por uma atualização ou
+pelo reinício do tablet (`AoLigar.kt` religa a tela inicial no boot).
+
 **O token nunca passa pelo JavaScript.** A chamada HTTP é feita pela casca
 (`ClienteDataverse.kt`), que só aceita caminho relativo e monta a URL com o
 endereço do ambiente. Isso também evita depender de CORS no WebView.

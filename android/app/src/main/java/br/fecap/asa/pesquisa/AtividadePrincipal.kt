@@ -3,6 +3,9 @@ package br.fecap.asa.pesquisa
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.provider.Settings
 import android.view.WindowManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -12,6 +15,7 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -34,9 +38,15 @@ class AtividadePrincipal : AppCompatActivity() {
     private lateinit var cofre: Cofre
     private lateinit var autenticacao: AutenticacaoEscolhida
 
-    // Ligado pela manutencao para atualizar o app. Volta a desligar quando a
-    // pessoa sai do app e retorna a ele (onRestart).
-    private var quiosqueSuspenso = false
+    // Ligado pela manutencao para atualizar o app ou mexer nas configuracoes.
+    // So desliga pelo botao "Voltar ao modo quiosque", pelo prazo automatico,
+    // ou com o app reaberto do zero (reinicio, atualizacao). Voltar ao app nao
+    // desliga: antes desligava, e sair do quiosque virava um loop.
+    @Volatile var quiosqueSuspenso = false
+        private set
+
+    private val relogio = Handler(Looper.getMainLooper())
+    private val retornoAutomatico = Runnable { reativarQuiosque() }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,18 +120,18 @@ class AtividadePrincipal : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         esconderBarras()
-        if (!quiosqueSuspenso) {
-            // A depuracao USB so e bloqueada com a instalacao completa: antes
-            // disso o adb ainda e o caminho para instalar a credencial.
-            val instalacaoCompleta = instalacao.temPin && instalacao.grupo != null && cofre.temCredencial
-            Quiosque.preparar(this, bloquearDepuracao = instalacaoCompleta)
-            Quiosque.entrar(this)
-        }
+        if (!quiosqueSuspenso) aplicarQuiosque()
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        quiosqueSuspenso = false
+    private fun aplicarQuiosque() {
+        // A depuracao USB so e bloqueada com a instalacao completa: antes
+        // disso o adb ainda e o caminho para instalar a credencial.
+        val instalacaoCompleta = instalacao.temPin && instalacao.grupo != null && cofre.temCredencial
+        Quiosque.preparar(this, bloquearDepuracao = instalacaoCompleta)
+        // O travamento da tela so pode ser pedido com o app na frente. Se o
+        // prazo automatico vencer com o app atras, a tela inicial ja volta a
+        // ser o app e o proximo retorno a ele trava (onResume).
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) Quiosque.entrar(this)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -130,6 +140,7 @@ class AtividadePrincipal : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        relogio.removeCallbacks(retornoAutomatico)
         rede.parar()
         webView.destroy()
         super.onDestroy()
@@ -184,6 +195,20 @@ class AtividadePrincipal : AppCompatActivity() {
     fun suspenderQuiosque() {
         quiosqueSuspenso = true
         Quiosque.sair(this)
+        // Esquecido suspenso, o tablet ficaria aberto para qualquer um.
+        relogio.removeCallbacks(retornoAutomatico)
+        relogio.postDelayed(retornoAutomatico, MINUTOS_DE_SUSPENSAO * 60_000L)
+    }
+
+    fun reativarQuiosque() {
+        relogio.removeCallbacks(retornoAutomatico)
+        quiosqueSuspenso = false
+        aplicarQuiosque()
+    }
+
+    /** So durante a suspensao: com o quiosque ativo o Android nao deixaria abrir. */
+    fun abrirConfiguracoes() {
+        startActivity(Intent(Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 
     private fun esconderBarras() {
@@ -196,6 +221,7 @@ class AtividadePrincipal : AppCompatActivity() {
 
     companion object {
         const val HOST = "appassets.androidplatform.net"
+        private const val MINUTOS_DE_SUSPENSAO = 15L
         private const val EXTRA_TENANT = "tenant"
         private const val EXTRA_CLIENTE = "cliente"
         private const val EXTRA_SEGREDO = "segredo"

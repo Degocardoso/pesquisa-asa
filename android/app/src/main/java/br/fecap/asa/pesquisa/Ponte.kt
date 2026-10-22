@@ -59,6 +59,17 @@ class Ponte(
                         atividade.runOnUiThread { atividade.suspenderQuiosque() }
                         responder(id, null)
                     }
+                    "voltarAoQuiosque" -> {
+                        instalacao.exigirPin(args.optString("pin"))
+                        atividade.runOnUiThread { atividade.reativarQuiosque() }
+                        responder(id, null)
+                    }
+                    "abrirConfiguracoes" -> {
+                        instalacao.exigirPin(args.optString("pin"))
+                        if (!atividade.quiosqueSuspenso) throw ErroDaPonte("erro", "Saia do modo quiosque primeiro.")
+                        atividade.runOnUiThread { atividade.abrirConfiguracoes() }
+                        responder(id, null)
+                    }
                     "requisitar" -> responder(id, dataverse.requisitar(args))
                     else -> throw ErroDaPonte("erro", "Metodo desconhecido: $metodo")
                 }
@@ -79,6 +90,7 @@ class Ponte(
         .put("acesso", autenticacao.modo)
         .put("segredoVenceEm", autenticacao.segredoVenceEm() ?: JSONObject.NULL)
         .put("quiosque", Quiosque.estado(atividade))
+        .put("quiosqueSuspenso", atividade.quiosqueSuspenso)
         .put("versao", BuildConfig.VERSION_NAME)
 
     private fun responder(id: String, valor: Any?) {

@@ -33,6 +33,7 @@ export class PlataformaSimulada {
       acesso: "conta",
       segredoVenceEm: null,
       quiosque: "inativo (simulador)",
+      quiosqueSuspenso: false,
       versao: "simulador",
     };
   }
@@ -61,6 +62,8 @@ export class PlataformaSimulada {
   }
 
   async sairDoQuiosque() { throw { mensagem: "Nao se aplica no simulador." }; }
+  async voltarAoQuiosque() { throw { mensagem: "Nao se aplica no simulador." }; }
+  async abrirConfiguracoes() { throw { mensagem: "Nao se aplica no simulador." }; }
 
   criarCrm(config) {
     if (!this.crm) this.crm = new CrmFalso({ fuso: config.fuso, limite: config.limite_da_consulta });
