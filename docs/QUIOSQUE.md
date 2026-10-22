@@ -39,7 +39,11 @@ Antes de tudo, confira se o tablet já não é gerenciado por outro sistema da T
 2. Desative qualquer outro app em *Apps de administração do dispositivo*.
 3. Em Configurações → Data e hora: data e hora automáticas, fuso de São Paulo.
    O prazo de 30 minutos é contado pelo relógio do tablet.
-4. Em Configurações → Sobre → toque 7 vezes em "Número da versão" para liberar
+4. **Samsung:** em Configurações → Recursos avançados → Multi janela, desligue
+   o **Menu Multi janela** (a alça de três pontinhos no topo), **Deslizar para
+   janela pop-up** e **Deslizar para tela dividida**. Sem isso, dá para
+   minimizar o app mesmo com o quiosque ativo.
+5. Em Configurações → Sobre → toque 7 vezes em "Número da versão" para liberar
    as opções do desenvolvedor. Lá, ligue a **Depuração USB**.
 
 ## Passo 2 — Instalar e registrar como dono

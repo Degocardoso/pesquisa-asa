@@ -12,13 +12,22 @@
         android:theme="@style/Tema"
         android:usesCleartextTraffic="false">
 
+        <!--
+            resizeableActivity=false pede para o app nao ir para tela dividida
+            nem janela flutuante (a alca de tres pontinhos da Samsung). Em
+            tablets com Android 12 ou mais novo o sistema pode ignorar o pedido;
+            o que garante e desligar a multijanela nas configuracoes do tablet
+            (docs/QUIOSQUE.md).
+        -->
         <activity
             android:name=".AtividadePrincipal"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode|density"
             android:exported="true"
             android:launchMode="singleTask"
             android:lockTaskMode="if_whitelisted"
-            android:screenOrientation="sensorLandscape">
+            android:resizeableActivity="false"
+            android:screenOrientation="sensorLandscape"
+            android:supportsPictureInPicture="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
